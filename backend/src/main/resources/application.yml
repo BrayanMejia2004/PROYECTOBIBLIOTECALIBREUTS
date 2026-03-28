@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+jwt:
+  secret: ${JWT_SECRET:biblioteca-uts-secret-key-must-be-at-least-256-bits-long-for-hmac-sha256}
+  expiration: ${JWT_EXPIRATION:86400000}
+  refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}
+
+cors:
+  allowed-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:3000}
+
+rate-limit:
+  auth:
+    max-attempts: 5
+    window-minutes: 15
+  register:
+    max-attempts: 3
+    window-minutes: 60
+  general:
+    max-requests: 100
+    window-minutes: 1
+
+spring:
+  application:
+    name: biblioteca-uts
+  
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:prod}
+  
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}

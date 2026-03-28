@@ -1,0 +1,278 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@theme {
+  /* Primary Colors */
+  --color-primary: #c3d62f;
+  --color-primary-hover: #a8b828;
+  --color-primary-light: #d4e059;
+  
+  /* Secondary Colors */
+  --color-secondary: #132F20;
+  --color-secondary-hover: #0f241a;
+  
+  /* Background Colors */
+  --color-bg-light: #FFFFFF;
+  --color-bg-dark: #0a1f15;
+  
+  /* Surface Colors */
+  --color-surface-light: #ffffff;
+  --color-surface-dark: #1a2e24;
+  
+  /* Text Colors */
+  --color-text-primary: #1a2e1c;
+  --color-text-secondary: #5a6b5c;
+  --color-text-muted: #8a9b8c;
+  
+  /* Border Colors */
+  --color-border: rgba(195, 214, 47, 0.2);
+  --color-border-hover: rgba(195, 214, 47, 0.4);
+  
+  /* Shadow */
+  --shadow-subtle: 0 1px 3px rgba(19, 47, 32, 0.08);
+  --shadow-card: 0 2px 8px rgba(19, 47, 32, 0.1);
+  --shadow-hover: 0 4px 16px rgba(19, 47, 32, 0.15);
+  
+  /* Typography */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+@layer base {
+  html {
+    background-color: #FFFFFF;
+    color: #1a2e1c;
+  }
+
+  html.dark {
+    background-color: #0a1f15;
+    color: #e8ebe9;
+  }
+
+  body {
+    @apply m-0 min-h-screen;
+    font-family: var(--font-body);
+    line-height: 1.6;
+    font-weight: 400;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    @apply min-h-screen flex flex-col;
+  }
+
+  /* Typography Classes */
+  .font-display {
+    font-family: var(--font-display);
+  }
+  
+  .font-body {
+    font-family: var(--font-body);
+  }
+  
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  /* Headings */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+}
+
+@layer components {
+  /* Card with subtle shadow */
+  .card-minimal {
+    @apply bg-white dark:bg-[#1a2e24] rounded-xl;
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 200ms ease-out, transform 200ms ease-out;
+  }
+  
+  .card-minimal:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+  }
+
+  /* Button primary */
+  .btn-primary {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--color-primary-hover);
+  }
+  
+  .btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(195, 214, 47, 0.3);
+  }
+
+  /* Input focus */
+  .input-minimal:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(195, 214, 47, 0.15);
+  }
+
+  /* Badge */
+  .badge-minimal {
+    @apply px-2 py-0.5 rounded-full text-xs font-medium;
+    background-color: rgba(195, 214, 47, 0.15);
+    color: var(--color-secondary);
+  }
+}
+
+/* Animations */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 300ms ease-out forwards;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 300ms ease-out forwards;
+  }
+
+  .animate-slide-in {
+    animation: slideIn 300ms ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 200ms ease-out forwards;
+  }
+
+  .animate-pulse-soft {
+    animation: pulseSoft 2s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+  }
+
+  /* Stagger animations */
+  .stagger-1 { animation-delay: 50ms; }
+  .stagger-2 { animation-delay: 100ms; }
+  .stagger-3 { animation-delay: 150ms; }
+  .stagger-4 { animation-delay: 200ms; }
+  .stagger-5 { animation-delay: 250ms; }
+  .stagger-6 { animation-delay: 300ms; }
+  .stagger-7 { animation-delay: 350ms; }
+  .stagger-8 { animation-delay: 400ms; }
+
+  /* Touch target for mobile */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Card hover lift */
+  .card-lift {
+    transition: transform 300ms ease-out, box-shadow 300ms ease-out;
+  }
+  
+  .card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  /* Button ripple effect */
+  .btn-ripple {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-ripple::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.5s, opacity 0.5s;
+  }
+
+  .btn-ripple:active::after {
+    transform: scale(2);
+    opacity: 1;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes pulseSoft {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* Skeleton loading */
+  .skeleton {
+    @apply bg-gray-200 dark:bg-gray-700 rounded;
+    background: linear-gradient(90deg, 
+      rgba(255,255,255,0) 0%, 
+      rgba(255,255,255,0.5) 50%, 
+      rgba(255,255,255,0) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+}
