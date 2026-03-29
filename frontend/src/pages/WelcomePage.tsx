@@ -1,9 +1,10 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/common/Button';
 import { useTranslation } from '../i18n';
 
 export default function WelcomePage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-white">
@@ -42,7 +43,7 @@ export default function WelcomePage() {
         <div className="flex flex-col items-center">
           <div className="w-full max-w-xs sm:max-w-sm flex flex-col items-center gap-4">
             <Button
-              onClick={() => window.location.href = '/login'}
+              onClick={() => navigate('/login')}
               className="w-full py-4 text-lg"
             >
               {t('welcome.loginButton')}
