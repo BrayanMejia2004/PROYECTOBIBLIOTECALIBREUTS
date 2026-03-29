@@ -36,7 +36,7 @@ export default function AddBookPage() {
       queryClient.invalidateQueries({ queryKey: ['books'] });
       setSuccessMessage(t('addBook.success'));
       setTimeout(() => {
-        navigate('/');
+        navigate('/catalogue');
       }, 2000);
     },
     onError: (error: unknown) => {
