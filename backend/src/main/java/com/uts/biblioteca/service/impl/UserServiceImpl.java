@@ -48,7 +48,11 @@ public class UserServiceImpl implements UserService {
             user.setName(name);
         }
         if (photoUrl != null) {
-            user.setPhotoUrl(photoUrl);
+            if (photoUrl.isBlank()) {
+                user.setPhotoUrl(null);
+            } else {
+                user.setPhotoUrl(photoUrl);
+            }
         }
         user.setUpdatedAt(Instant.now());
         user = userRepository.save(user);

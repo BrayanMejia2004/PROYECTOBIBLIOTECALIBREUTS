@@ -49,7 +49,7 @@ export default function SettingsPage() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const updateMutation = useMutation({
-    mutationFn: (photoUrl: string) => authApi.updateProfilePhoto(photoUrl),
+    mutationFn: (photoUrl: string | null) => authApi.updateProfilePhoto(photoUrl),
     onSuccess: (res) => {
       const updatedUser = res.data;
       localStorage.setItem('user', JSON.stringify(updatedUser));
@@ -57,6 +57,9 @@ export default function SettingsPage() {
       updateUser({ photoUrl: updatedUser.photoUrl });
       setSuccessMessage(t('settings.success'));
       setErrorMessage('');
+      if (!updatedUser.photoUrl) {
+        setPreviewImage(null);
+      }
     },
     onError: (error: unknown) => {
       const axiosError = error as { response?: { data?: { message?: string } } };
@@ -64,6 +67,10 @@ export default function SettingsPage() {
       setSuccessMessage('');
     },
   });
+
+  const handleRemovePhoto = () => {
+    updateMutation.mutate(null);
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -133,10 +140,7 @@ export default function SettingsPage() {
               />
               <button
                 type="button"
-                onClick={() => {
-                  setPreviewImage(null);
-                  if (fileInputRef.current) fileInputRef.current.value = '';
-                }}
+                onClick={handleRemovePhoto}
                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm"
               >
                 ×

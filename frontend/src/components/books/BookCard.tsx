@@ -41,8 +41,8 @@ export function BookCard({ book, onClick, animationDelay = 0 }: BookCardProps) {
             {book.title}
           </h3>
           <p className="text-xs sm:text-sm text-[#5a6b5c] dark:text-[#8a9b8c] mb-1 sm:mb-2 truncate">{book.author}</p>
-          <p className="text-xs text-[#5a6b5c] dark:text-[#8a9b8c] line-clamp-2 sm:line-clamp-3 mb-2 sm:mb-3 hidden sm:block">
-            {book.summary}
+          <p className="text-xs text-[#5a6b5c] dark:text-[#8a9b8c] line-clamp-2 mb-2 sm:mb-3 hidden sm:block">
+            {book.summary && book.summary.length > 80 ? book.summary.substring(0, 80) + '...' : book.summary}
           </p>
         </div>
         

@@ -14,6 +14,6 @@ export const authApi = {
   updateProfile: (name?: string, photoUrl?: string) =>
     apiClient.put<User>('/users/profile', null, { params: { name, photoUrl } }),
 
-  updateProfilePhoto: (photoUrl: string) =>
+  updateProfilePhoto: (photoUrl: string | null) =>
     apiClient.put<User>('/users/profile/photo', { photoUrl }),
 };
