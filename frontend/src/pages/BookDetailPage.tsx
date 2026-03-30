@@ -67,7 +67,7 @@ export default function BookDetailPage() {
   return (
     <div className="max-w-4xl mx-auto fade-in w-full">
       <button
-        onClick={() => navigate('/admin?tab=books')}
+        onClick={() => navigate('/catalogue')}
         className="text-[#132F20] dark:text-[#c3d62f] hover:text-[#c3d62f] dark:hover:text-[#a8b828] mb-4 sm:mb-6 md:mb-8 flex items-center gap-1 transition-colors text-sm sm:text-base"
       >
         ← {t('common.back')}

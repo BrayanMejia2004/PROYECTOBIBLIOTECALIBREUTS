@@ -52,21 +52,21 @@ public class RateLimitFilter extends OncePerRequestFilter {
             if (isAuthEndpoint(path)) {
                 if (!checkRateLimit(clientIp, "auth", authMaxAttempts, authWindowMinutes)) {
                     throw RateLimitException.forAuth(
-                            "Has superado el límite de intentos de inicio de sesión. Intenta de nuevo en " + authWindowMinutes + " minutos.",
+                            "Límite de intentos de inicio de sesión agotado. Por favor, espera " + authWindowMinutes + " minutos antes de intentar nuevamente.",
                             authWindowMinutes * 60
                     );
                 }
             } else if (isRegisterEndpoint(path)) {
                 if (!checkRateLimit(clientIp, "register", registerMaxAttempts, registerWindowMinutes)) {
                     throw RateLimitException.forRegister(
-                            "Has superado el límite de registros. Intenta de nuevo en " + registerWindowMinutes + " minutos.",
+                            "Límite de intentos de registro agotado. Por favor, espera " + registerWindowMinutes + " minutos antes de intentar nuevamente.",
                             registerWindowMinutes * 60
                     );
                 }
             } else {
                 if (!checkRateLimit(clientIp, "general", generalMaxRequests, generalWindowMinutes)) {
                     throw RateLimitException.forAuth(
-                            "Has superado el límite de solicitudes. Por favor espera un momento.",
+                            "Demasiadas solicitudes. Por favor, espera un momento antes de continuar.",
                             generalWindowMinutes * 60
                     );
                 }

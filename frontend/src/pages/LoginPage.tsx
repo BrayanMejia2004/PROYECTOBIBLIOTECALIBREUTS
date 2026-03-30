@@ -12,6 +12,7 @@ import { loginSchema, LoginFormData } from '../utils/validation';
 
 interface ApiError {
   response?: {
+    status?: number;
     data?: {
       message?: string;
       fieldErrors?: Record<string, string>;
@@ -39,7 +40,13 @@ export default function LoginPage() {
 
   const handleApiError = (err: unknown) => {
     const axiosError = err as ApiError;
+    const status = axiosError.response?.status;
     const responseData = axiosError.response?.data;
+    
+    if (status === 429) {
+      setError(responseData?.message || 'Demasiados intentos. Por favor, espera antes de intentar nuevamente.');
+      return;
+    }
     
     if (responseData?.fieldErrors) {
       Object.entries(responseData.fieldErrors).forEach(([field, message]) => {
@@ -51,6 +58,8 @@ export default function LoginPage() {
       if (responseData.message) {
         setError(responseData.message);
       }
+    } else if (status === 401) {
+      setError('Correo o contraseña incorrectos');
     } else {
       setError(responseData?.message || axiosError.message || t('auth.loginError'));
     }
