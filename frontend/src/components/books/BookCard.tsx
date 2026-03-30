@@ -20,17 +20,17 @@ export function BookCard({ book, onClick, animationDelay = 0 }: BookCardProps) {
     >
       <Card 
         onClick={onClick} 
-        className="p-3 sm:p-4 h-full min-h-[320px] sm:min-h-[340px] flex flex-col card-lift cursor-pointer group"
+        className="p-3 sm:p-4 h-full min-h-[280px] sm:min-h-[320px] flex flex-col card-lift cursor-pointer group"
       >
         <div className="flex-shrink-0 mb-2 sm:mb-3 overflow-hidden rounded-lg">
           {book.coverImage ? (
             <img 
               src={book.coverImage} 
               alt={book.title}
-              className="w-full aspect-[2/3] object-cover transform group-hover:scale-105 transition-transform duration-300 ease-out"
+              className="w-full h-28 sm:h-40 aspect-[2/3] object-cover transform group-hover:scale-105 transition-transform duration-300 ease-out"
             />
           ) : (
-            <div className="w-full aspect-[2/3] bg-[#c3d62f]/10 rounded-lg flex items-center justify-center group-hover:bg-[#c3d62f]/20 transition-colors duration-300">
+            <div className="w-full h-28 sm:h-40 aspect-[2/3] bg-[#c3d62f]/10 rounded-lg flex items-center justify-center group-hover:bg-[#c3d62f]/20 transition-colors duration-300">
               <BookOpenIcon size={32} className="sm:w-10 sm:h-10 text-[#c3d62f] group-hover:scale-110 transition-transform duration-300" />
             </div>
           )}
@@ -41,8 +41,8 @@ export function BookCard({ book, onClick, animationDelay = 0 }: BookCardProps) {
             {book.title}
           </h3>
           <p className="text-xs sm:text-sm text-[#5a6b5c] dark:text-[#8a9b8c] mb-1 sm:mb-2 truncate">{book.author}</p>
-          <p className="text-xs text-[#5a6b5c] dark:text-[#8a9b8c] line-clamp-2 mb-2 sm:mb-3 hidden sm:block">
-            {book.summary && book.summary.length > 80 ? book.summary.substring(0, 80) + '...' : book.summary}
+          <p className="text-xs text-[#5a6b5c] dark:text-[#8a9b8c] line-clamp-1 sm:line-clamp-2 mb-2 sm:mb-3">
+            {book.summary && book.summary.length > 60 ? book.summary.substring(0, 60) + '...' : book.summary}
           </p>
         </div>
         
