@@ -77,9 +77,9 @@ export function LoanCard({ loan, onReturn, isReturning }: LoanCardProps) {
       `}
     >
       <div className="flex flex-col md:flex-row md:items-start gap-4">
-        {/* Book Cover */}
+        {/* Book Cover - Hidden on mobile, visible on desktop */}
         <div 
-          className="flex-shrink-0 cursor-pointer"
+          className="hidden sm:block flex-shrink-0 cursor-pointer"
           onClick={() => navigate(`/books/${loan.bookId}`)}
         >
           {loan.book?.coverImage ? (

@@ -20,17 +20,17 @@ export function BookCard({ book, onClick, animationDelay = 0 }: BookCardProps) {
     >
       <Card 
         onClick={onClick} 
-        className="p-3 sm:p-4 h-full flex flex-col card-lift cursor-pointer group"
+        className="p-3 sm:p-4 h-full min-h-[320px] sm:min-h-[340px] flex flex-col card-lift cursor-pointer group"
       >
         <div className="flex-shrink-0 mb-2 sm:mb-3 overflow-hidden rounded-lg">
           {book.coverImage ? (
             <img 
               src={book.coverImage} 
               alt={book.title}
-              className="w-full h-32 sm:h-40 object-cover transform group-hover:scale-105 transition-transform duration-300 ease-out"
+              className="w-full aspect-[2/3] object-cover transform group-hover:scale-105 transition-transform duration-300 ease-out"
             />
           ) : (
-            <div className="w-full h-32 sm:h-40 bg-[#c3d62f]/10 rounded-lg flex items-center justify-center group-hover:bg-[#c3d62f]/20 transition-colors duration-300">
+            <div className="w-full aspect-[2/3] bg-[#c3d62f]/10 rounded-lg flex items-center justify-center group-hover:bg-[#c3d62f]/20 transition-colors duration-300">
               <BookOpenIcon size={32} className="sm:w-10 sm:h-10 text-[#c3d62f] group-hover:scale-110 transition-transform duration-300" />
             </div>
           )}
