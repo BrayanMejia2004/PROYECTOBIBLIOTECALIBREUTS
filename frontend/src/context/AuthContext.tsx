@@ -13,6 +13,7 @@ interface AuthContextType {
   register: (data: RegisterRequest) => Promise<void>;
   logout: () => void;
   refreshToken: () => Promise<boolean>;
+  updateUser: (updates: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -57,6 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       phone: data.phone,
       email: data.email,
       role: data.role,
+      photoUrl: data.photoUrl,
     };
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
@@ -76,6 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       phone: authData.phone,
       email: authData.email,
       role: authData.role,
+      photoUrl: authData.photoUrl,
     };
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
@@ -105,6 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         phone: data.phone,
         email: data.email,
         role: data.role,
+        photoUrl: data.photoUrl,
       };
       localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
@@ -112,6 +116,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       return false;
     }
+  };
+
+  const updateUser = (updates: Partial<User>) => {
+    const currentUser = user;
+    if (!currentUser) return;
+    
+    const updatedUser = { ...currentUser, ...updates };
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+    setUser(updatedUser);
   };
 
   useEffect(() => {
@@ -139,6 +152,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         register,
         logout,
         refreshToken,
+        updateUser,
       }}
     >
       {children}

@@ -20,6 +20,7 @@ export interface AuthResponse {
   phone: string;
   email: string;
   role: Role;
+  photoUrl?: string;
 }
 
 export interface Book {

@@ -41,7 +41,7 @@ function compressImage(base64: string, maxWidth = 300, quality = 0.7): Promise<s
 export default function SettingsPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(user?.photoUrl || null);
@@ -54,6 +54,7 @@ export default function SettingsPage() {
       const updatedUser = res.data;
       localStorage.setItem('user', JSON.stringify(updatedUser));
       queryClient.setQueryData(['user'], updatedUser);
+      updateUser({ photoUrl: updatedUser.photoUrl });
       setSuccessMessage(t('settings.success'));
       setErrorMessage('');
     },

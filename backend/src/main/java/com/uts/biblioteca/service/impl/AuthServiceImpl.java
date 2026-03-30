@@ -82,6 +82,7 @@ public class AuthServiceImpl implements AuthService {
                     .phone(user.getPhone())
                     .email(user.getEmail())
                     .role(user.getRole())
+                    .photoUrl(user.getPhotoUrl())
                     .build();
         } catch (Exception e) {
             log.error("Error al registrar usuario: {}", e.getMessage(), e);
@@ -115,6 +116,7 @@ public class AuthServiceImpl implements AuthService {
                 .phone(user.getPhone())
                 .email(user.getEmail())
                 .role(user.getRole())
+                .photoUrl(user.getPhotoUrl())
                 .build();
     }
     
@@ -149,6 +151,7 @@ public class AuthServiceImpl implements AuthService {
                 .phone(user.getPhone())
                 .email(user.getEmail())
                 .role(user.getRole())
+                .photoUrl(user.getPhotoUrl())
                 .build();
     }
     
