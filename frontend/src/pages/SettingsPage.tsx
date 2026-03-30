@@ -49,7 +49,7 @@ export default function SettingsPage() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const updateMutation = useMutation({
-    mutationFn: (photoUrl: string) => authApi.updateProfile(undefined, photoUrl),
+    mutationFn: (photoUrl: string) => authApi.updateProfilePhoto(photoUrl),
     onSuccess: (res) => {
       const updatedUser = res.data;
       localStorage.setItem('user', JSON.stringify(updatedUser));

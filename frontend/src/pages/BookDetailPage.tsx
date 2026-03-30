@@ -33,7 +33,7 @@ export default function BookDetailPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['book', id] });
       setLoanMessage(t('book.loanRequested'));
-      setTimeout(() => navigate('/'), 2000);
+      setTimeout(() => navigate('/catalogue'), 2000);
     },
     onError: (error: unknown) => {
       const axiosError = error as { response?: { data?: { message?: string } } };

@@ -36,6 +36,16 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUserProfile(user.getId(), name, photoUrl));
     }
 
+    /** Actualiza solo la foto de perfil (recibe base64 en body) */
+    @PutMapping("/profile/photo")
+    public ResponseEntity<UserResponse> updateProfilePhoto(
+            @AuthenticationPrincipal User user,
+            @RequestBody PhotoRequest request) {
+        return ResponseEntity.ok(userService.updateUserProfile(user.getId(), null, request.photoUrl()));
+    }
+
+    public record PhotoRequest(String photoUrl) {}
+
     /** Actualiza el perfil completo del usuario (documento, nombre, semestre, teléfono) */
     @PutMapping("/profile/full")
     public ResponseEntity<UserResponse> updateFullProfile(

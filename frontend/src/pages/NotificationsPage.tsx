@@ -119,8 +119,8 @@ export default function NotificationsPage() {
         ← {t('common.back')}
       </button>
 
-      <div className="flex items-center justify-between mb-6 slide-up">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+      <div className="mb-6 slide-up">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
           {t('settings.notifications')}
         </h1>
         {unreadCount > 0 && (
@@ -128,6 +128,7 @@ export default function NotificationsPage() {
             variant="outline"
             onClick={() => markAllReadMutation.mutate()}
             isLoading={markAllReadMutation.isPending}
+            className="w-full"
           >
             {t('settings.markAllRead')}
           </Button>
@@ -142,36 +143,37 @@ export default function NotificationsPage() {
               className={`p-4 border card-lift ${getNotificationStyles(notification.type, notification.read)}`}
               style={{ animationDelay: `${index * 0.05}s` }}
             >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-start gap-3 flex-1">
-                  <span className="text-2xl flex-shrink-0">{getNotificationIcon(notification.type)}</span>
-                  <div className="flex-1">
-                    <p className={`font-medium ${getNotificationTextStyles(notification.type)}`}>
-                      {getNotificationTitle(notification.type)}
+              <div className="flex items-start gap-3">
+                <span className="text-2xl flex-shrink-0">{getNotificationIcon(notification.type)}</span>
+                <div className="flex-1">
+                  <p className={`font-medium ${getNotificationTextStyles(notification.type)}`}>
+                    {getNotificationTitle(notification.type)}
+                  </p>
+                  <p className="text-gray-700 dark:text-gray-300 mt-1">
+                    {notification.message}
+                  </p>
+                  {notification.userName && (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                      {notification.userName}
                     </p>
-                    <p className="text-gray-700 dark:text-gray-300 mt-1">
-                      {notification.message}
-                    </p>
-                    {notification.userName && (
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        {notification.userName}
-                      </p>
-                    )}
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                      {notification.dueDate ? formatDate(notification.dueDate) : ''}
-                    </p>
-                  </div>
+                  )}
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                    {notification.dueDate ? formatDate(notification.dueDate) : ''}
+                  </p>
                 </div>
-                {!notification.read && (
+              </div>
+              {!notification.read && (
+                <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-600">
                   <Button
                     variant="outline"
                     onClick={() => markAsReadMutation.mutate(notification.id)}
                     isLoading={markAsReadMutation.isPending}
+                    className="w-full"
                   >
                     {t('settings.markAsRead')}
                   </Button>
-                )}
-              </div>
+                </div>
+              )}
             </Card>
           ))}
         </div>
