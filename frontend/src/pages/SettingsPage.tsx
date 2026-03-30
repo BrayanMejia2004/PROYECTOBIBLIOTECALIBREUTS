@@ -69,7 +69,7 @@ export default function SettingsPage() {
   });
 
   const handleRemovePhoto = () => {
-    updateMutation.mutate(null);
+    updateMutation.mutate('');
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
