@@ -1,6 +1,11 @@
 {
   "version": 1,
   "skills": {
+    "api-response-optimization": {
+      "source": "aj-geddes/useful-ai-prompts",
+      "sourceType": "github",
+      "computedHash": "953ad17d6f96e7710ff27c4e0a2051bbd3974b34208c128f2036319bdd8769f4"
+    },
     "api-security-best-practices": {
       "source": "sickn33/antigravity-awesome-skills",
       "sourceType": "github",
