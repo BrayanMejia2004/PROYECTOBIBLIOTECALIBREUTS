@@ -11,7 +11,6 @@ import { Spinner } from '../components/common/Spinner';
 import { useTranslation } from '../i18n';
 import { BookOpenIcon } from '../components/common/AdminIcons';
 import { StarIcon } from '../components/common/UserIcons';
-import { RatingForm } from '../components/books/RatingForm';
 
 export default function BookDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -42,11 +41,7 @@ export default function BookDetailPage() {
     },
   });
 
-  const { data: userRating } = useQuery({
-    queryKey: ['book-user-rating', id],
-    queryFn: () => booksApi.getUserRating(id!).then(res => res.data),
-    enabled: !!id && isAuthenticated && !isAdmin,
-  });
+
 
   if (isLoading) {
     return <Spinner size="lg" />;
@@ -184,17 +179,6 @@ export default function BookDetailPage() {
                 {t('auth.login')}
               </Button>
             </div>
-          )}
-
-          {!book.availability && isAuthenticated && !isAdmin && (
-            <Card className="p-4 sm:p-6 card-lift slide-up" style={{ animationDelay: '0.35s' }}>
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-4 text-sm sm:text-base">{t('book.rateBook')}</h3>
-              <RatingForm 
-                bookId={id!} 
-                initialRating={userRating?.rating}
-                initialComment={userRating?.comment}
-              />
-            </Card>
           )}
         </div>
       </div>
