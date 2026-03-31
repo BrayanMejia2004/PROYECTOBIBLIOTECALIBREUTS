@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Loan } from '../../types';
 import { Card } from '../common/Card';
 import { Button } from '../common/Button';
 import { useTranslation } from '../../i18n';
-import { booksApi } from '../../api/books';
 import { BookOpenIcon, ClipboardListIcon, CheckCircleIcon, AlertTriangleIcon, CalendarIcon, ClockIcon } from '../common/AdminIcons';
-import { StarIcon } from '../common/UserIcons';
+import { RatingForm } from '../books/RatingForm';
 
 interface LoanCardProps {
   loan: Loan;
@@ -17,25 +15,8 @@ interface LoanCardProps {
 export function LoanCard({ loan, onReturn }: LoanCardProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [showRating, setShowRating] = useState(false);
   const [ratingSubmitted, setRatingSubmitted] = useState(false);
-
-  const { data: userRating } = useQuery({
-    queryKey: ['book-user-rating', loan.bookId],
-    queryFn: () => booksApi.getUserRating(loan.bookId).then(res => res.data),
-    enabled: !!loan.bookId,
-  });
-
-  const ratingMutation = useMutation({
-    mutationFn: (data: { rating: number; comment?: string }) =>
-      booksApi.rateBook(loan.bookId, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['book-user-rating', loan.bookId] });
-      setRatingSubmitted(true);
-      onReturn();
-    },
-  });
 
   const statusConfig = {
     ACTIVE: {
@@ -182,27 +163,14 @@ export function LoanCard({ loan, onReturn }: LoanCardProps) {
 
           {/* Rating Form */}
           {loan.status === 'ACTIVE' && showRating && !ratingSubmitted && (
-            <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-              <h4 className="font-semibold text-gray-900 dark:text-white mb-3 text-sm">{t('book.rateBook')}</h4>
-              <div className="flex gap-1 mb-3">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => ratingMutation.mutate({ rating: star })}
-                    disabled={ratingMutation.isPending}
-                    className="focus:outline-none"
-                  >
-                    <StarIcon 
-                      size={28} 
-                      className={star <= (userRating?.rating || 0) ? 'text-yellow-400 fill-current' : 'text-gray-300 dark:text-gray-600'} 
-                    />
-                  </button>
-                ))}
-              </div>
-              {ratingMutation.isPending && (
-                <p className="text-xs text-gray-500">{t('common.loading')}...</p>
-              )}
+            <div className="mt-4">
+              <RatingForm 
+                bookId={loan.bookId}
+                onSuccess={() => {
+                  setRatingSubmitted(true);
+                  onReturn();
+                }}
+              />
             </div>
           )}
 
