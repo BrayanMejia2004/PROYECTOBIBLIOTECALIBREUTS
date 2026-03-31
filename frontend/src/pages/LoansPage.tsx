@@ -72,7 +72,6 @@ export default function LoansPage() {
                 <LoanCard
                   loan={loan}
                   onReturn={() => returnMutation.mutate(loan.id)}
-                  isReturning={returnMutation.isPending}
                 />
               </div>
             ))}
@@ -99,7 +98,6 @@ export default function LoansPage() {
                 <LoanCard
                   loan={loan}
                   onReturn={() => {}}
-                  isReturning={false}
                 />
               </div>
             ))}
