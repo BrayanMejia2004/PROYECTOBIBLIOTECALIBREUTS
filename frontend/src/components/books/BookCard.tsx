@@ -20,9 +20,9 @@ export function BookCard({ book, onClick, animationDelay = 0 }: BookCardProps) {
     >
       <Card 
         onClick={onClick} 
-        className="p-3 sm:p-4 flex flex-row items-start gap-3 sm:gap-4 card-lift cursor-pointer group"
+        className="p-3 sm:p-4 flex flex-row sm:flex-col gap-3 min-h-[120px] sm:min-h-[320px] w-full card-lift cursor-pointer group"
       >
-        <div className="flex-shrink-0 w-20 h-28 sm:w-24 sm:h-32 overflow-hidden rounded-lg">
+        <div className="flex-shrink-0 w-16 h-24 sm:w-full sm:h-40 overflow-hidden rounded-lg">
           {book.coverImage ? (
             <img 
               src={book.coverImage} 
@@ -30,22 +30,24 @@ export function BookCard({ book, onClick, animationDelay = 0 }: BookCardProps) {
               className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300 ease-out"
             />
           ) : (
-            <div className="w-full h-full bg-[#c3d62f]/10 rounded-lg flex items-center justify-center group-hover:bg-[#c3d62f]/20 transition-colors duration-300">
+            <div className="w-full h-full sm:h-40 bg-[#c3d62f]/10 rounded-lg flex items-center justify-center group-hover:bg-[#c3d62f]/20 transition-colors duration-300">
               <BookOpenIcon size={28} className="sm:w-10 sm:h-10 text-[#c3d62f] group-hover:scale-110 transition-transform duration-300" />
             </div>
           )}
         </div>
         
-        <div className="flex-1 min-w-0">
-          <h3 className="font-display font-semibold text-sm sm:text-base md:text-lg text-[#1a2e1c] dark:text-[#e8ebe9] line-clamp-2 mb-1 group-hover:text-[#c3d62f] transition-colors duration-200">
-            {book.title}
-          </h3>
-          <p className="text-xs sm:text-sm text-[#5a6b5c] dark:text-[#8a9b8c] mb-1 sm:mb-2 truncate">{book.author}</p>
-          <p className="text-xs text-[#5a6b5c] dark:text-[#8a9b8c] line-clamp-1 sm:line-clamp-2 mb-2 sm:mb-3 hidden xs:block">
-            {book.summary && book.summary.length > 60 ? book.summary.substring(0, 60) + '...' : book.summary}
-          </p>
+        <div className="flex-1 min-w-0 flex flex-col justify-between">
+          <div>
+            <h3 className="font-display font-semibold text-sm sm:text-base md:text-lg text-[#1a2e1c] dark:text-[#e8ebe9] line-clamp-2 mb-1 group-hover:text-[#c3d62f] transition-colors duration-200">
+              {book.title}
+            </h3>
+            <p className="text-xs sm:text-sm text-[#5a6b5c] dark:text-[#8a9b8c] mb-1 sm:mb-2 truncate">{book.author}</p>
+            <p className="text-xs text-[#5a6b5c] dark:text-[#8a9b8c] line-clamp-2 sm:line-clamp-2 mb-2 sm:mb-3">
+              {book.summary && book.summary.length > 100 ? book.summary.substring(0, 100) + '...' : book.summary}
+            </p>
+          </div>
           
-          <div className="flex items-center justify-between pt-2 sm:pt-3 border-t border-[#c3d62f]/20">
+          <div className="flex items-center justify-between pt-2 sm:pt-3 border-t border-[#c3d62f]/20 mt-auto">
             <div className="flex items-center gap-1">
               <StarIcon size={16} className="sm:w-5 sm:h-5 text-[#c3d62f] fill-current" />
               <span className="text-sm font-medium text-[#132F20] dark:text-[#e8ebe9]">
