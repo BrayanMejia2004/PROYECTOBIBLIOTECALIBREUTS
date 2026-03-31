@@ -34,7 +34,3 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
-  
-  cache:
-    type: simple
-    cache-names: books,categories,user-ratings

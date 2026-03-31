@@ -13,8 +13,6 @@ import com.uts.biblioteca.repository.RatingRepository;
 import com.uts.biblioteca.service.interfaces.BookService;
 import com.uts.biblioteca.service.interfaces.LoanService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,37 +34,31 @@ public class BookServiceImpl implements BookService {
 
     @SuppressWarnings("null")
     @Override
-    @Cacheable(value = "books", key = "#pageable.pageNumber")
     public Page<BookResponse> getAllBooks(Pageable pageable) {
         return bookRepository.findAll(pageable).map(this::toResponse);
     }
 
     @Override
-    @Cacheable(value = "books-available", key = "#pageable.pageNumber")
     public Page<BookResponse> getAvailableBooks(Pageable pageable) {
         return bookRepository.findByAvailability(true, pageable).map(this::toResponse);
     }
 
     @Override
-    @Cacheable(value = "books-search", key = "#searchTerm + '-' + #pageable.pageNumber")
     public Page<BookResponse> searchBooks(String searchTerm, Pageable pageable) {
         return bookRepository.search(searchTerm, pageable).map(this::toResponse);
     }
 
     @Override
-    @Cacheable(value = "books-category", key = "#category + '-' + #pageable.pageNumber")
     public Page<BookResponse> getBooksByCategory(String category, Pageable pageable) {
         return bookRepository.findByCategory(category, pageable).map(this::toResponse);
     }
 
     @Override
-    @Cacheable(value = "books-author", key = "#author + '-' + #pageable.pageNumber")
     public Page<BookResponse> getBooksByAuthor(String author, Pageable pageable) {
         return bookRepository.findByAuthorContainingIgnoreCase(author, pageable).map(this::toResponse);
     }
 
     @Override
-    @Cacheable(value = "book-detail", key = "#id")
     public BookResponse getBookById(String id) {
         @SuppressWarnings("null")
         Book book = bookRepository.findById(id)
@@ -77,7 +69,6 @@ public class BookServiceImpl implements BookService {
     @SuppressWarnings("null")
     @Override
     @Transactional
-    @CacheEvict(value = {"books", "books-available", "books-category", "books-author", "book-detail"}, allEntries = true)
     public BookResponse createBook(CreateBookRequest request, String userId, String userName) {
         Book book = Book.builder()
                 .title(request.getTitle())
@@ -107,7 +98,6 @@ public class BookServiceImpl implements BookService {
     @SuppressWarnings("null")
     @Override
     @Transactional
-    @CacheEvict(value = {"books", "books-available", "books-category", "books-author", "book-detail"}, allEntries = true)
     public BookResponse updateBook(String id, UpdateBookRequest request) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Libro no encontrado"));
@@ -130,7 +120,6 @@ public class BookServiceImpl implements BookService {
     @SuppressWarnings("null")
     @Override
     @Transactional
-    @CacheEvict(value = {"books", "books-available", "books-category", "books-author", "book-detail"}, allEntries = true)
     public void deleteBook(String id) {
         if (!bookRepository.existsById(id)) {
             throw new ResourceNotFoundException("Libro no encontrado");
