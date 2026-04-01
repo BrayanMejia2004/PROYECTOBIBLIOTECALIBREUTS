@@ -28,7 +28,7 @@ export function DatePickerInput({ label, value, onChange, error, placeholder = '
         ref={ref as React.Ref<HTMLButtonElement>}
         className={`
           w-full px-3 py-2.5 text-left border rounded-xl
-          bg-white dark:bg-gray-800 
+          bg-white dark:bg-[#1a2e24] 
           text-gray-900 dark:text-gray-100
           transition-all duration-200
           flex items-center justify-between
