@@ -26,6 +26,11 @@
       "sourceType": "github",
       "computedHash": "f93de647b0e98393b530d05e0a97f87dbf652759197fd87dc2e5d80b28d8b621"
     },
+    "react-performance-optimization": {
+      "source": "nickcrew/claude-ctx-plugin",
+      "sourceType": "github",
+      "computedHash": "6c806f31279047f73f3d3a8cd3031d2d2ae84d9be6885f70a8475e890061b549"
+    },
     "responsive-design": {
       "source": "supercent-io/skills-template",
       "sourceType": "github",

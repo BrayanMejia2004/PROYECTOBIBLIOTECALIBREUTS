@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, AuthResponse, LoginRequest, RegisterRequest } from '../types';
 import { authApi } from '../api/auth';
+import { adminApi } from '../api/admin';
+import { booksApi } from '../api/books';
 import { queryClient } from '../App';
 import { useTranslation } from '../i18n';
 import { isTokenExpired } from '../utils/jwt';
@@ -62,7 +64,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
+
+    await prefetchInitialData(data.role);
+    
     return userData;
+  };
+
+  const prefetchInitialData = async (role: string) => {
+    try {
+      if (role === 'ADMIN') {
+        await Promise.all([
+          queryClient.prefetchQuery({
+            queryKey: ['adminStats'],
+            queryFn: () => adminApi.getStats().then(res => res.data),
+          }),
+          queryClient.prefetchQuery({
+            queryKey: ['adminBooks'],
+            queryFn: () => booksApi.getAll(0, 100).then(res => res.data),
+          }),
+          queryClient.prefetchQuery({
+            queryKey: ['adminLoans', 0],
+            queryFn: () => adminApi.getAllLoans(0, 10).then(res => res.data),
+          }),
+          queryClient.prefetchQuery({
+            queryKey: ['adminUsers', 0],
+            queryFn: () => adminApi.getAllUsers(0, 10).then(res => res.data),
+          }),
+        ]);
+      } else {
+        await Promise.all([
+          queryClient.prefetchQuery({
+            queryKey: ['books', 'all', '', '', 0],
+            queryFn: () => booksApi.getAll(0, 12).then(res => res.data),
+          }),
+        ]);
+      }
+    } catch (error) {
+      console.error('Error prefetching initial data:', error);
+    }
   };
 
   const register = async (data: RegisterRequest) => {
