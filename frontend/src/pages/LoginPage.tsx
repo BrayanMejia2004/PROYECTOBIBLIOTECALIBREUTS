@@ -98,13 +98,13 @@ export default function LoginPage() {
       <div className="relative z-10 flex items-center justify-center min-h-screen py-12 px-4">
         <div className="max-w-md w-full">
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-30 h-30 rounded-full bg-[#c3d62f]/20 mb-4 bg-white border-4 border-[#c3d62f]">
-            <svg className="w-16 h-16 text-[#132F20]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="inline-flex items-center justify-center w-30 h-30 rounded-full bg-[#c3d62f]/20 mb-4 bg-white dark:bg-[#1a2e24] border-4 border-[#c3d62f]">
+            <svg className="w-16 h-16 text-[#132F20] dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
           </div>
-          <h1 className="text-5xl font-display font-semibold text-[#132F20] dark:text-[#c3d62f]">Biblioteca UTS</h1>
-          <p className="mt-2 text-[#5a6b5c] dark:text-[#8a9b8c]">{t('auth.subtitle')}</p>
+          <h1 className="text-5xl font-display font-semibold text-[#132F20] dark:text-[#132F20]">Biblioteca UTS</h1>
+          <p className="mt-2 text-[#5a6b5c] dark:text-[#132F20]">{t('auth.subtitle')}</p>
         </div>
 
         <Card className="p-8 bg-white/90 dark:bg-[#1a2e24]/90 backdrop-blur-sm border border-[#c3d62f]/20 shadow-[0_2px_8px_rgba(19,47,32,0.1)]">
@@ -154,7 +154,7 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-6 text-center text-sm">
-            <span className="text-[#5a6b5c] dark:text-[#8a9b8c]">{t('auth.noAccount')} </span>
+            <span className="text-[#5a6b5c] dark:text-white">{t('auth.noAccount')} </span>
             <Link to="/register" className="text-[#132F20] dark:text-[#c3d62f] hover:underline font-medium">
               {t('auth.register')}
             </Link>
