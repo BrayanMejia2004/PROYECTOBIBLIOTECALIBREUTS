@@ -47,7 +47,7 @@ export function CustomDropdown({ label, value, options, onChange, placeholder = 
           flex items-center justify-between
           ${error 
             ? 'border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500' 
-            : 'border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-[#c3d62f] focus:border-[#c3d62f]'
+            : 'border-gray-300 dark:border-[#c3d62f]/30 focus:ring-2 focus:ring-[#c3d62f] focus:border-[#c3d62f]'
           }
           focus:outline-none
         `}
