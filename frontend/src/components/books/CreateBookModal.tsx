@@ -165,7 +165,7 @@ export function CreateBookModal({ isOpen, onClose }: CreateBookModalProps) {
             value={formData.summary}
             onChange={(e) => handleInputChange('summary', e.target.value)}
             rows={4}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#c3d62f] focus:border-[#c3d62f] bg-white dark:bg-[#1a2e24] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-[#c3d62f]/30 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#c3d62f] focus:border-[#c3d62f] bg-white dark:bg-[#1a2e24] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
             placeholder={t('addBook.summaryField')}
           />
           {errors.summary && <p className="text-red-500 dark:text-red-400 text-sm mt-1">{errors.summary}</p>}
