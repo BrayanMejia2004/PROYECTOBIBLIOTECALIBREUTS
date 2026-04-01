@@ -30,7 +30,8 @@ export const FilterChip = memo(function FilterChip({ label, icon, isActive, onCl
             : 'bg-[#c3d62f]/20 text-[#132F20]'
         }`}>
           {count}
-      </span>
+        </span>
+      )}
     </button>
   );
 });
