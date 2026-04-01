@@ -358,7 +358,7 @@ export function EditBookModal({ isOpen, onClose, book }: EditBookModalProps) {
             />
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-[#c3d62f]/30 dark:border-[#c3d62f]/20 rounded-xl p-4 text-center cursor-pointer hover:border-[#c3d62f] transition-colors"
+              className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 text-center cursor-pointer hover:border-[#c3d62f] transition-colors"
             >
               {coverUrl ? (
                 <div className="relative inline-block">
