@@ -246,7 +246,7 @@ export default function AddBookPage() {
             />
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-[#c3d62f]/30 dark:border-[#c3d62f]/20 rounded-lg p-6 text-center cursor-pointer hover:border-[#c3d62f] dark:hover:border-[#c3d62f]/50 transition-colors"
+              className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center cursor-pointer hover:border-[#c3d62f] transition-colors"
             >
               {previewImage ? (
                 <div className="relative inline-block">
