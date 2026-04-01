@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { BookOpenIcon, ClipboardListIcon, CheckCircleIcon, AlertTriangleIcon, CalendarIcon, ClockIcon, PenLineIcon, ChevronDownIcon, ChevronUpIcon } from '../common/AdminIcons';
 
 interface Loan {
@@ -24,7 +24,7 @@ interface AdminLoanCardProps {
   formatDate: (date: string) => string;
 }
 
-export function AdminLoanCard({ loan, formatDate }: AdminLoanCardProps) {
+export const AdminLoanCard = memo(function AdminLoanCard({ loan, formatDate }: AdminLoanCardProps) {
   const [expanded, setExpanded] = useState(false);
 
   const statusConfig = {
@@ -193,4 +193,4 @@ export function AdminLoanCard({ loan, formatDate }: AdminLoanCardProps) {
       </div>
     </div>
   );
-}
+});

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loan } from '../../types';
 import { Card } from '../common/Card';
@@ -12,7 +12,7 @@ interface LoanCardProps {
   onReturn: () => void;
 }
 
-export function LoanCard({ loan, onReturn }: LoanCardProps) {
+export const LoanCard = memo(function LoanCard({ loan, onReturn }: LoanCardProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [showRating, setShowRating] = useState(false);
@@ -180,7 +180,8 @@ export function LoanCard({ loan, onReturn }: LoanCardProps) {
             </div>
           )}
         </div>
-      </div>
-    </Card>
-  );
-}
+        </div>
+      </Card>
+    );
+  }
+);

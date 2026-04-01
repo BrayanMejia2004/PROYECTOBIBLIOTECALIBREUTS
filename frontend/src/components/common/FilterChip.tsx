@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { memo, ReactNode } from 'react';
 
 interface FilterChipProps {
   label: string;
@@ -8,7 +8,7 @@ interface FilterChipProps {
   count?: number;
 }
 
-export function FilterChip({ label, icon, isActive, onClick, count }: FilterChipProps) {
+export const FilterChip = memo(function FilterChip({ label, icon, isActive, onClick, count }: FilterChipProps) {
   return (
     <button
       onClick={onClick}
@@ -30,8 +30,7 @@ export function FilterChip({ label, icon, isActive, onClick, count }: FilterChip
             : 'bg-[#c3d62f]/20 text-[#132F20]'
         }`}>
           {count}
-        </span>
-      )}
+      </span>
     </button>
   );
-}
+});

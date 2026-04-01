@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { memo, ReactNode } from 'react';
 
 interface StatsCardProps {
   title: string;
@@ -7,7 +7,7 @@ interface StatsCardProps {
   variant?: 'default' | 'warning' | 'success';
 }
 
-export function StatsCard({ title, value, icon, variant = 'default' }: StatsCardProps) {
+export const StatsCard = memo(function StatsCard({ title, value, icon, variant = 'default' }: StatsCardProps) {
   const variantStyles = {
     default: 'border-[#c3d62f]/30',
     warning: 'border-red-500/30',
@@ -58,4 +58,4 @@ export function StatsCard({ title, value, icon, variant = 'default' }: StatsCard
       </div>
     </div>
   );
-}
+});

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Book } from '../../types';
 import { Card } from '../common/Card';
 import { useTranslation } from '../../i18n';
@@ -10,7 +11,7 @@ interface BookCardProps {
   animationDelay?: number;
 }
 
-export function BookCard({ book, onClick, animationDelay = 0 }: BookCardProps) {
+export const BookCard = memo(function BookCard({ book, onClick, animationDelay = 0 }: BookCardProps) {
   const { t } = useTranslation();
   
   return (
@@ -73,4 +74,4 @@ export function BookCard({ book, onClick, animationDelay = 0 }: BookCardProps) {
       </Card>
     </div>
   );
-}
+});
