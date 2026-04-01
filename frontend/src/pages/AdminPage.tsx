@@ -117,13 +117,13 @@ export default function AdminPage() {
     toast((t) => (
       <div className="flex flex-col gap-3">
         <div>
-          <p className="font-medium text-[#132F20] dark:text-white">¿Eliminar usuario?</p>
+          <p className="font-medium text-[#132F20] dark:text-[#132F20]">¿Eliminar usuario?</p>
           <p className="text-sm text-gray-500 mt-1">"{userItem.name}" - Esta acción no se puede deshacer.</p>
         </div>
         <div className="flex gap-2 justify-end">
           <button
             onClick={() => toast.dismiss(t.id)}
-            className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-[#c3d62f] text-gray-700 dark:text-[#132F20] rounded-lg hover:opacity-90 transition-colors"
           >
             Cancelar
           </button>
