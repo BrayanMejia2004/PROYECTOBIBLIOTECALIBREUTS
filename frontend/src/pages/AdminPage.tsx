@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { lazy } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { booksApi } from '../api/books';
@@ -8,15 +9,17 @@ import { Spinner } from '../components/common/Spinner';
 import { SkeletonStats, SkeletonChart, SkeletonTable, SkeletonCard } from '../components/common/Skeleton';
 import { SearchInput } from '../components/common/SearchInput';
 import { ActionMenu } from '../components/common/ActionMenu';
-import { CreateBookModal } from '../components/books/CreateBookModal';
-import { EditBookModal } from '../components/books/EditBookModal';
-import { EditUserModal } from '../components/users/EditUserModal';
 import { StatsCard, AdminLoanCard, AdminTabs } from '../components/admin';
 import { CategoryChart, LoanStatusChart, LoansTrendChart } from '../components/admin/charts';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../i18n';
 import { User, Book } from '../types';
 import toast, { Toaster } from 'react-hot-toast';
+
+const CreateBookModal = lazy(() => import('../components/books/CreateBookModal').then(m => ({ default: m.CreateBookModal })));
+const EditBookModal = lazy(() => import('../components/books/EditBookModal').then(m => ({ default: m.EditBookModal })));
+const EditUserModal = lazy(() => import('../components/users/EditUserModal').then(m => ({ default: m.EditUserModal })));
+
 import {
   LayoutDashboardIcon,
   BookOpenIcon,
