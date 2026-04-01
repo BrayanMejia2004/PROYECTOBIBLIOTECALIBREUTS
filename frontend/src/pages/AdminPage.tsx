@@ -420,7 +420,7 @@ export default function AdminPage() {
                           {book.author}
                         </td>
                         <td className="px-4 py-3">
-                          <span className="px-2.5 py-1 bg-[#c3d62f]/10 text-[#132F20] rounded-full text-xs font-medium">
+                          <span className="px-2.5 py-1 bg-[#c3d62f] dark:bg-[#c3d62f] text-[#132F20] dark:text-[#132F20] rounded-full text-xs font-medium">
                             {book.category}
                           </span>
                         </td>
@@ -668,8 +668,8 @@ export default function AdminPage() {
                           <td className="px-4 py-3">
                             <span className={`px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 w-fit ${
                               userItem.role === 'ADMIN' 
-                                ? 'bg-[#c3d62f]/30 text-[#132F20]' 
-                                : 'bg-[#c3d62f]/10 text-[#132F20]'
+                                ? 'bg-[#c3d62f] dark:bg-[#c3d62f] text-[#132F20] dark:text-[#132F20]' 
+                                : 'bg-[#c3d62f] dark:bg-[#c3d62f] text-[#132F20] dark:text-[#132F20]'
                             }`}>
                               {userItem.role === 'ADMIN' ? (
                                 <>
