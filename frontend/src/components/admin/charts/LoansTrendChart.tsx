@@ -1,4 +1,5 @@
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { useTheme } from '../../../context/ThemeContext';
 
 interface LoansTrendChartProps {
   data: Array<{ date: string; loans: number }>;
@@ -9,8 +10,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     const date = new Date(label);
     return (
       <div className="bg-white dark:bg-[#1a2e24] border border-[#c3d62f] rounded-lg p-3 shadow-lg">
-        <p className="text-[#132F20] font-semibold">{date.toLocaleDateString('es-CO')}</p>
-        <p className="text-gray-600 dark:text-gray-300">préstamos: {payload[0].value}</p>
+        <p className="text-white font-semibold">{date.toLocaleDateString('es-CO')}</p>
+        <p className="text-gray-300">préstamos: {payload[0].value}</p>
       </div>
     );
   }
@@ -18,6 +19,9 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export function LoansTrendChart({ data }: LoansTrendChartProps) {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+
   return (
     <div className="h-64 min-h-[256px]">
       <ResponsiveContainer width="100%" height="100%">
@@ -30,13 +34,13 @@ export function LoansTrendChart({ data }: LoansTrendChartProps) {
           </defs>
           <XAxis 
             dataKey="date" 
-            tick={{ fill: '#6b7280', fontSize: 11 }}
+            tick={{ fill: isDark ? '#9ca3af' : '#6b7280', fontSize: 11 }}
             tickFormatter={(value) => {
               const date = new Date(value);
               return `${date.getDate()}/${date.getMonth() + 1}`;
             }}
           />
-          <YAxis tick={{ fill: '#6b7280', fontSize: 12 }} />
+          <YAxis tick={{ fill: isDark ? '#9ca3af' : '#6b7280', fontSize: 12 }} />
           <Tooltip content={<CustomTooltip />} />
           <Area 
             type="monotone" 
