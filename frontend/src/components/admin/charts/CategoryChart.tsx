@@ -9,7 +9,7 @@ const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-white dark:bg-[#1a2e24] border border-[#c3d62f] rounded-lg p-3 shadow-lg">
-        <p className="text-[#132F20] font-semibold">{payload[0].payload.category}</p>
+        <p className="text-[#132F20] dark:text-white font-semibold">{payload[0].payload.category}</p>
         <p className="text-gray-600 dark:text-gray-300">cantidad: {payload[0].value}</p>
       </div>
     );
