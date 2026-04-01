@@ -4,6 +4,19 @@ interface LoansTrendChartProps {
   data: Array<{ date: string; loans: number }>;
 }
 
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    const date = new Date(label);
+    return (
+      <div className="bg-white dark:bg-[#1a2e24] border border-[#c3d62f] rounded-lg p-3 shadow-lg">
+        <p className="text-[#132F20] font-semibold">{date.toLocaleDateString('es-CO')}</p>
+        <p className="text-gray-600 dark:text-gray-300">préstamos: {payload[0].value}</p>
+      </div>
+    );
+  }
+  return null;
+};
+
 export function LoansTrendChart({ data }: LoansTrendChartProps) {
   return (
     <div className="h-64 min-h-[256px]">
@@ -24,18 +37,7 @@ export function LoansTrendChart({ data }: LoansTrendChartProps) {
             }}
           />
           <YAxis tick={{ fill: '#6b7280', fontSize: 12 }} />
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: '#fff', 
-              border: '1px solid #c3d62f', 
-              borderRadius: '8px',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-            }}
-            labelFormatter={(value) => {
-              const date = new Date(value);
-              return date.toLocaleDateString('es-CO');
-            }}
-          />
+          <Tooltip content={<CustomTooltip />} />
           <Area 
             type="monotone" 
             dataKey="loans" 
