@@ -21,7 +21,7 @@ export default function WelcomePage() {
         <div className="flex flex-col items-center mt-20">
           <div className="w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 bg-white dark:bg-[#1a2e24] rounded-full flex items-center justify-center shadow-lg border-4 border-[#c3d62f]">
             <svg
-              className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 text-[#132F20]"
+              className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 text-[#132F20] dark:text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -49,7 +49,7 @@ export default function WelcomePage() {
               {t('welcome.loginButton')}
             </Button>
 
-            <p className="text-base text-[#5a6b5c] dark:text-[#8a9b8c]">
+            <p className="text-base text-[#5a6b5c] dark:text-[#132F20]">
               {t('welcome.noAccount')}{' '}
               <Link
                 to="/register"
