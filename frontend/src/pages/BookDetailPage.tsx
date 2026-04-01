@@ -109,7 +109,7 @@ export default function BookDetailPage() {
             <span
               className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
                 book.availability
-                  ? 'bg-[#c3d62f]/20 text-[#132F20]'
+                  ? 'bg-[#c3d62f] dark:bg-[#c3d62f] text-[#132F20] dark:text-[#132F20]'
                   : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
               }`}
             >
@@ -124,20 +124,20 @@ export default function BookDetailPage() {
 
           <div className="grid grid-cols-2 gap-3 sm:gap-4 slide-up" style={{ animationDelay: '0.25s' }}>
             <div className="bg-white dark:bg-[#1a2e24] p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20">
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{t('book.category')}</p>
-              <p className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">{book.category}</p>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-white">{t('book.category')}</p>
+              <p className="font-medium text-gray-900 dark:text-gray-400 text-sm sm:text-base">{book.category}</p>
             </div>
             <div className="bg-white dark:bg-[#1a2e24] p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20">
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{t('book.language')}</p>
-              <p className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">{book.language}</p>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-white">{t('book.language')}</p>
+              <p className="font-medium text-gray-900 dark:text-gray-400 text-sm sm:text-base">{book.language}</p>
             </div>
             <div className="bg-white dark:bg-[#1a2e24] p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20">
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{t('book.pages')}</p>
-              <p className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">{book.pages}</p>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-white">{t('book.pages')}</p>
+              <p className="font-medium text-gray-900 dark:text-gray-400 text-sm sm:text-base">{book.pages}</p>
             </div>
             <div className="bg-white dark:bg-[#1a2e24] p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20">
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{t('book.year')}</p>
-              <p className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">{formatDate(book.publicationDate)}</p>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-white">{t('book.year')}</p>
+              <p className="font-medium text-gray-900 dark:text-gray-400 text-sm sm:text-base">{formatDate(book.publicationDate)}</p>
             </div>
           </div>
 
