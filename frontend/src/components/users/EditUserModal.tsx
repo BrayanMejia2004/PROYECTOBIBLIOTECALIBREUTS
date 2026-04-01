@@ -246,6 +246,7 @@ export function EditUserModal({ isOpen, onClose, user }: EditUserModalProps) {
               onChange={(e) => handleInputChange('password', e.target.value)}
               error={errors.password}
               placeholder={t('editUser.password')}
+              autoComplete="new-password"
             />
             <p className="mt-1.5 text-xs text-gray-500">
               Dejar en blanco para mantener la contraseña actual
