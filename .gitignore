@@ -1,0 +1,9 @@
+# OpenCode y Agentes
+.agents/
+.opencode/
+
+# IDE
+.vscode/
+
+# Lock files
+skills-lock.json
