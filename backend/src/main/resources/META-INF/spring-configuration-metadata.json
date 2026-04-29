@@ -1,0 +1,29 @@
+{
+  "properties": [
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "Clave secreta para firmar JWT tokens"
+    },
+    {
+      "name": "jwt.expiration",
+      "type": "java.lang.Long",
+      "description": "Tiempo de expiración del access token en milisegundos"
+    },
+    {
+      "name": "jwt.refresh-expiration",
+      "type": "java.lang.Long",
+      "description": "Tiempo de expiración del refresh token en milisegundos"
+    },
+    {
+      "name": "cors.allowed-origins",
+      "type": "java.lang.String",
+      "description": "Orígenes permitidos para CORS (separados por coma)"
+    },
+    {
+      "name": "rate-limit.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Habilitar limitación de peticiones (rate limiting)"
+    }
+  ]
+}

@@ -7,3 +7,4 @@ logging:
   level:
     com.uts.biblioteca: INFO
     org.springframework.data.mongodb: WARN
+    "[org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer]": ERROR

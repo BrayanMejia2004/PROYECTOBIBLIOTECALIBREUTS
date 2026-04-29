@@ -7,3 +7,4 @@ logging:
   level:
     com.uts.biblioteca: DEBUG
     org.springframework.data.mongodb: DEBUG
+    "[org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer]": ERROR
