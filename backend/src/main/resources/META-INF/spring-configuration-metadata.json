@@ -21,9 +21,49 @@
       "description": "Orígenes permitidos para CORS (separados por coma)"
     },
     {
-      "name": "rate-limit.enabled",
-      "type": "java.lang.Boolean",
-      "description": "Habilitar limitación de peticiones (rate limiting)"
+      "name": "rate-limit.auth",
+      "type": "java.lang.Object",
+      "description": "Configuración de rate limit para autenticación"
+    },
+    {
+      "name": "rate-limit.auth.max-attempts",
+      "type": "java.lang.Integer",
+      "description": "Máximo de intentos de login permitidos"
+    },
+    {
+      "name": "rate-limit.auth.window-minutes",
+      "type": "java.lang.Integer",
+      "description": "Ventana de tiempo para rate limit de login (minutos)"
+    },
+    {
+      "name": "rate-limit.register",
+      "type": "java.lang.Object",
+      "description": "Configuración de rate limit para registro"
+    },
+    {
+      "name": "rate-limit.register.max-attempts",
+      "type": "java.lang.Integer",
+      "description": "Máximo de intentos de registro permitidos"
+    },
+    {
+      "name": "rate-limit.register.window-minutes",
+      "type": "java.lang.Integer",
+      "description": "Ventana de tiempo para rate limit de registro (minutos)"
+    },
+    {
+      "name": "rate-limit.general",
+      "type": "java.lang.Object",
+      "description": "Configuración de rate limit general"
+    },
+    {
+      "name": "rate-limit.general.max-requests",
+      "type": "java.lang.Integer",
+      "description": "Máximo de peticiones generales permitidas"
+    },
+    {
+      "name": "rate-limit.general.window-minutes",
+      "type": "java.lang.Integer",
+      "description": "Ventana de tiempo para rate limit general (minutos)"
     }
   ]
 }
