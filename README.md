@@ -16,23 +16,6 @@ Desarrollada con React + Spring Boot, orientada a estudiantes y administradores 
 
 </div>
 
----
-
-## 📋 Tabla de Contenidos
-
-- [¿Qué es Biblioteca UTS?](#-qué-es-biblioteca-uts)
-- [Características principales](#-características-principales)
-- [Stack tecnológico](#-stack-tecnológico)
-- [Requisitos previos](#-requisitos-previos)
-- [Instalación y configuración](#-instalación-y-configuración)
-- [Scripts disponibles](#-scripts-disponibles)
-- [Estructura del proyecto](#-estructura-del-proyecto)
-- [Despliegue](#-despliegue)
-- [Cómo contribuir](#-cómo-contribuir)
-- [Licencia](#-licencia)
-- [Contacto y soporte](#-contacto-y-soporte)
-
----
 
 ## 📖 ¿Qué es Biblioteca UTS?
 
