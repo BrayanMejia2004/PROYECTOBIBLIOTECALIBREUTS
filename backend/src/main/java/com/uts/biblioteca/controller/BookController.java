@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -34,14 +35,14 @@ public class BookController {
     /** Obtiene todos los libros con paginación */
     @GetMapping
     public ResponseEntity<Page<BookResponse>> getAllBooks(
-            @PageableDefault(size = 20) Pageable pageable) {
+            @PageableDefault(size = 20) @NonNull Pageable pageable) {
         return ResponseEntity.ok(bookService.getAllBooks(pageable));
     }
 
     /** Obtiene solo libros disponibles */
     @GetMapping("/available")
     public ResponseEntity<Page<BookResponse>> getAvailableBooks(
-            @PageableDefault(size = 20) Pageable pageable) {
+            @PageableDefault(size = 20) @NonNull Pageable pageable) {
         return ResponseEntity.ok(bookService.getAvailableBooks(pageable));
     }
 
@@ -49,7 +50,7 @@ public class BookController {
     @GetMapping("/search")
     public ResponseEntity<Page<BookResponse>> searchBooks(
             @RequestParam String q,
-            @PageableDefault(size = 20) Pageable pageable) {
+            @PageableDefault(size = 20) @NonNull Pageable pageable) {
         return ResponseEntity.ok(bookService.searchBooks(q, pageable));
     }
 
@@ -57,7 +58,7 @@ public class BookController {
     @GetMapping("/category/{category}")
     public ResponseEntity<Page<BookResponse>> getBooksByCategory(
             @PathVariable String category,
-            @PageableDefault(size = 20) Pageable pageable) {
+            @PageableDefault(size = 20) @NonNull Pageable pageable) {
         return ResponseEntity.ok(bookService.getBooksByCategory(category, pageable));
     }
 
@@ -65,7 +66,7 @@ public class BookController {
     @GetMapping("/author/{author}")
     public ResponseEntity<Page<BookResponse>> getBooksByAuthor(
             @PathVariable String author,
-            @PageableDefault(size = 20) Pageable pageable) {
+            @PageableDefault(size = 20) @NonNull Pageable pageable) {
         return ResponseEntity.ok(bookService.getBooksByAuthor(author, pageable));
     }
 
@@ -83,7 +84,7 @@ public class BookController {
 
     /** Obtiene detalle de un libro por ID */
     @GetMapping("/{id}")
-    public ResponseEntity<BookResponse> getBookById(@PathVariable String id) {
+    public ResponseEntity<BookResponse> getBookById(@PathVariable @NonNull String id) {
         return ResponseEntity.ok(bookService.getBookById(id));
     }
 
@@ -91,7 +92,7 @@ public class BookController {
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<BookResponse> createBook(
-            @Valid @RequestBody CreateBookRequest request,
+            @Valid @RequestBody @NonNull CreateBookRequest request,
             @AuthenticationPrincipal User user) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(bookService.createBook(request, user.getId(), user.getName()));
@@ -101,15 +102,15 @@ public class BookController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BookResponse> updateBook(
-            @PathVariable String id,
-            @RequestBody UpdateBookRequest request) {
+            @PathVariable @NonNull String id,
+            @RequestBody @NonNull UpdateBookRequest request) {
         return ResponseEntity.ok(bookService.updateBook(id, request));
     }
 
     /** Elimina un libro (solo admin) */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteBook(@PathVariable String id) {
+    public ResponseEntity<Void> deleteBook(@PathVariable @NonNull String id) {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
     }
@@ -117,8 +118,8 @@ public class BookController {
     /** Califica un libro */
     @PostMapping("/{id}/rate")
     public ResponseEntity<BookResponse> rateBook(
-            @PathVariable String id,
-            @Valid @RequestBody RatingRequest request,
+            @PathVariable @NonNull String id,
+            @Valid @RequestBody @NonNull RatingRequest request,
             @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(bookService.rateBook(id, user.getId(), request));
     }

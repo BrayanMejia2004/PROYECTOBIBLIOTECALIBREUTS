@@ -14,8 +14,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import org.springframework.lang.NonNull;
 
-/** Filtro que procesa el token JWT en cada solicitud con logging de seguridad */
+/**
+ * Filtro que procesa el token JWT en cada solicitud con logging de seguridad
+ */
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -25,9 +28,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(@SuppressWarnings("null") HttpServletRequest request, @SuppressWarnings("null") HttpServletResponse response,
-                                    @SuppressWarnings("null") FilterChain filterChain) throws ServletException, IOException {
-        
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
+
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String username;
@@ -54,8 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,
-                            userDetails.getAuthorities()
-                    );
+                            userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                     log.debug("User {} authenticated successfully", username);

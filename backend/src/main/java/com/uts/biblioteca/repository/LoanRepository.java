@@ -5,13 +5,11 @@ import com.uts.biblioteca.model.enums.LoanStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 /** Repositorio para acceso a documentos de préstamos en MongoDB */
-@Repository
 public interface LoanRepository extends MongoRepository<Loan, String> {
 
     /** Obtiene préstamos de un usuario */

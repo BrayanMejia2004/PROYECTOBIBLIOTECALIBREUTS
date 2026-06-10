@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Objects;
 
 /** Implementación de servicios de autenticación */
 @Service
@@ -34,9 +35,8 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
 
-    @SuppressWarnings("null")
     @Override
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResponse register(@NonNull RegisterRequest request) {
         log.info("Intentando registrar usuario con email: {}", request.getEmail());
         
         // Valida que el correo no exista
@@ -55,13 +55,13 @@ public class AuthServiceImpl implements AuthService {
         try {
             // Crea usuario con contraseña encriptada
             // Los campos adicionales (document, name, semester, phone) se completarán en el perfil
-            User user = User.builder()
+            User user = Objects.requireNonNull(User.builder()
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .role(Role.USER)
                     .createdAt(Instant.now())
                     .updatedAt(Instant.now())
-                    .build();
+                    .build());
 
             user = userRepository.save(user);
             log.info("Usuario guardado exitosamente: {}", user.getId());
@@ -70,8 +70,8 @@ public class AuthServiceImpl implements AuthService {
             String token = jwtTokenProvider.generateToken(user);
             
             // Genera y guarda refresh token
-            String refreshTokenValue = jwtTokenProvider.generateTokenFromEmail(user.getEmail());
-            saveRefreshToken(user.getId(), refreshTokenValue);
+            String refreshTokenValue = jwtTokenProvider.generateTokenFromEmail(Objects.requireNonNull(user.getEmail()));
+            saveRefreshToken(Objects.requireNonNull(user.getId()), Objects.requireNonNull(refreshTokenValue));
 
             return AuthResponse.builder()
                     .token(token)
@@ -90,9 +90,8 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    @SuppressWarnings("null")
     @Override
-    public AuthResponse login(LoginRequest request) {
+    public AuthResponse login(@NonNull LoginRequest request) {
         // Autentica credenciales
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
@@ -104,8 +103,8 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtTokenProvider.generateToken(user);
         
         // Genera y guarda refresh token
-        String refreshTokenValue = jwtTokenProvider.generateTokenFromEmail(user.getEmail());
-        saveRefreshToken(user.getId(), refreshTokenValue);
+        String refreshTokenValue = jwtTokenProvider.generateTokenFromEmail(Objects.requireNonNull(user.getEmail()));
+        saveRefreshToken(Objects.requireNonNull(user.getId()), Objects.requireNonNull(refreshTokenValue));
 
         return AuthResponse.builder()
                 .token(token)
@@ -121,11 +120,10 @@ public class AuthServiceImpl implements AuthService {
     }
     
     @Override
-    public AuthResponse refreshToken(String currentToken) {
+    public AuthResponse refreshToken(@NonNull String currentToken) {
         // Valida el refresh token contra la base de datos
-        @SuppressWarnings("null")
-        RefreshToken storedToken = refreshTokenRepository.findByTokenAndRevokedFalse(currentToken)
-                .orElseThrow(() -> new BadRequestException("Refresh token inválido o expirado"));
+        RefreshToken storedToken = Objects.requireNonNull(refreshTokenRepository.findByTokenAndRevokedFalse(currentToken)
+                .orElseThrow(() -> new BadRequestException("Refresh token inválido o expirado")));
         
         // Verifica si no ha expirado
         if (storedToken.getExpiresAt().isBefore(Instant.now())) {
@@ -155,9 +153,8 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
     
-    @SuppressWarnings("null")
     @Override
-    public void logout(String refreshToken) {
+    public void logout(@NonNull String refreshToken) {
         refreshTokenRepository.findByToken(refreshToken)
                 .ifPresent(token -> {
                     token.setRevoked(true);
@@ -166,22 +163,19 @@ public class AuthServiceImpl implements AuthService {
                 });
     }
     
-    @SuppressWarnings("null")
     @Override
-    public void logoutAll(String userId) {
+    public void logoutAll(@NonNull String userId) {
         refreshTokenRepository.deleteByUserId(userId);
         log.info("Todos los refresh tokens revocados para usuario: {}", userId);
     }
     
-    @SuppressWarnings("null")
     private void saveRefreshToken(@NonNull String userId, @NonNull String tokenValue) {
-        RefreshToken refreshToken = RefreshToken.builder()
+        refreshTokenRepository.save(Objects.requireNonNull(RefreshToken.builder()
                 .token(tokenValue)
                 .userId(userId)
                 .expiresAt(Instant.now().plusMillis(jwtTokenProvider.getRefreshExpiration()))
                 .createdAt(Instant.now())
                 .revoked(false)
-                .build();
-        refreshTokenRepository.save(refreshToken);
+                .build()));
     }
 }

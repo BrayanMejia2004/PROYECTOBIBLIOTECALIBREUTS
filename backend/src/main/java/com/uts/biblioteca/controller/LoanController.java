@@ -11,6 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
+
+import java.util.Objects;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,9 +31,9 @@ public class LoanController {
     /** Solicita un nuevo préstamo de libro */
     @PostMapping
     public ResponseEntity<LoanResponse> createLoan(
-            @Valid @RequestBody CreateLoanRequest request,
+            @Valid @RequestBody @NonNull CreateLoanRequest request,
             @AuthenticationPrincipal User user) {
-        LoanResponse response = loanService.createLoan(user.getId(), request);
+        LoanResponse response = loanService.createLoan(Objects.requireNonNull(user.getId()), request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -38,21 +41,21 @@ public class LoanController {
     @GetMapping
     public ResponseEntity<Page<LoanResponse>> getUserLoans(
             @AuthenticationPrincipal User user,
-            @PageableDefault(size = 20) Pageable pageable) {
-        return ResponseEntity.ok(loanService.getUserLoans(user.getId(), pageable));
+            @PageableDefault(size = 20) @NonNull Pageable pageable) {
+        return ResponseEntity.ok(loanService.getUserLoans(Objects.requireNonNull(user.getId()), pageable));
     }
 
     /** Obtiene un préstamo específico por ID */
     @GetMapping("/{id}")
-    public ResponseEntity<LoanResponse> getLoanById(@PathVariable String id) {
+    public ResponseEntity<LoanResponse> getLoanById(@PathVariable @NonNull String id) {
         return ResponseEntity.ok(loanService.getLoanById(id));
     }
 
     /** Devuelve un libro prestado */
     @PostMapping("/{id}/return")
     public ResponseEntity<LoanResponse> returnLoan(
-            @PathVariable String id,
+            @PathVariable @NonNull String id,
             @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(loanService.returnLoan(id, user.getId()));
+        return ResponseEntity.ok(loanService.returnLoan(id, Objects.requireNonNull(user.getId())));
     }
 }

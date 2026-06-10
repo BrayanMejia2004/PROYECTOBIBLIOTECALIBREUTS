@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /** Manejador centralizado de excepciones con sanitización de errores */
-@SuppressWarnings("unused")
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {

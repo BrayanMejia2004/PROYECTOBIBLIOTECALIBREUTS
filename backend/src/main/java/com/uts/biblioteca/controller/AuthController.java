@@ -9,12 +9,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Controlador para autenticación de usuarios.
@@ -29,14 +31,14 @@ public class AuthController {
 
     /** Registro de nuevo usuario con validación de correo @uts.edu.co */
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody @NonNull RegisterRequest request) {
         AuthResponse response = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     /** Inicio de sesión de usuario existente */
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody @NonNull LoginRequest request) {
         AuthResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }
@@ -44,7 +46,7 @@ public class AuthController {
     /** Refresca el token JWT usando el token actual */
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(@RequestBody RefreshRequest request) {
-        AuthResponse response = authService.refreshToken(request.getToken());
+        AuthResponse response = authService.refreshToken(Objects.requireNonNull(request.getToken()));
         return ResponseEntity.ok(response);
     }
     

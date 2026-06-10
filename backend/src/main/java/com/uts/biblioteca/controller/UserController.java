@@ -7,6 +7,9 @@ import com.uts.biblioteca.service.interfaces.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
+
+import java.util.Objects;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +27,7 @@ public class UserController {
     /** Obtiene el perfil del usuario autenticado */
     @GetMapping("/profile")
     public ResponseEntity<UserResponse> getProfile(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(userService.getUserProfile(user.getId()));
+        return ResponseEntity.ok(userService.getUserProfile(Objects.requireNonNull(user.getId())));
     }
 
     /** Actualiza el perfil del usuario (nombre y foto) */
@@ -33,7 +36,7 @@ public class UserController {
             @AuthenticationPrincipal User user,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String photoUrl) {
-        return ResponseEntity.ok(userService.updateUserProfile(user.getId(), name, photoUrl));
+        return ResponseEntity.ok(userService.updateUserProfile(Objects.requireNonNull(user.getId()), name, photoUrl));
     }
 
     /** Actualiza solo la foto de perfil (recibe base64 en body) */
@@ -41,7 +44,7 @@ public class UserController {
     public ResponseEntity<UserResponse> updateProfilePhoto(
             @AuthenticationPrincipal User user,
             @RequestBody PhotoRequest request) {
-        return ResponseEntity.ok(userService.updateUserProfile(user.getId(), null, request.photoUrl()));
+        return ResponseEntity.ok(userService.updateUserProfile(Objects.requireNonNull(user.getId()), null, request.photoUrl()));
     }
 
     public record PhotoRequest(String photoUrl) {}
@@ -50,13 +53,13 @@ public class UserController {
     @PutMapping("/profile/full")
     public ResponseEntity<UserResponse> updateFullProfile(
             @AuthenticationPrincipal User user,
-            @Valid @RequestBody UpdateProfileRequest request) {
-        return ResponseEntity.ok(userService.updateFullProfile(user.getId(), request));
+            @Valid @RequestBody @NonNull UpdateProfileRequest request) {
+        return ResponseEntity.ok(userService.updateFullProfile(Objects.requireNonNull(user.getId()), request));
     }
 
     /** Verifica si el perfil del usuario está completo */
     @GetMapping("/profile/complete")
     public ResponseEntity<Boolean> isProfileComplete(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(userService.isProfileComplete(user.getId()));
+        return ResponseEntity.ok(userService.isProfileComplete(Objects.requireNonNull(user.getId())));
     }
 }

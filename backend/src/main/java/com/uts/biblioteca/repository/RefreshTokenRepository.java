@@ -3,12 +3,10 @@ package com.uts.biblioteca.repository;
 import com.uts.biblioteca.model.entity.RefreshToken;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 /** Repositorio para acceso a refresh tokens en MongoDB */
-@Repository
 public interface RefreshTokenRepository extends MongoRepository<RefreshToken, String> {
 
     /** Busca refresh token por valor */

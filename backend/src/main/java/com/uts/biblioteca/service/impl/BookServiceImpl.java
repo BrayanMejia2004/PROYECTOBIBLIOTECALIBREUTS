@@ -15,11 +15,13 @@ import com.uts.biblioteca.service.interfaces.LoanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,45 +34,44 @@ public class BookServiceImpl implements BookService {
     private final RatingRepository ratingRepository;
     private final LoanService loanService;
 
-    @SuppressWarnings("null")
+    
     @Override
-    public Page<BookResponse> getAllBooks(Pageable pageable) {
+    public Page<BookResponse> getAllBooks(@NonNull Pageable pageable) {
         return bookRepository.findAll(pageable).map(this::toResponse);
     }
 
     @Override
-    public Page<BookResponse> getAvailableBooks(Pageable pageable) {
+    public Page<BookResponse> getAvailableBooks(@NonNull Pageable pageable) {
         return bookRepository.findByAvailability(true, pageable).map(this::toResponse);
     }
 
     @Override
-    public Page<BookResponse> searchBooks(String searchTerm, Pageable pageable) {
+    public Page<BookResponse> searchBooks(String searchTerm, @NonNull Pageable pageable) {
         return bookRepository.search(searchTerm, pageable).map(this::toResponse);
     }
 
     @Override
-    public Page<BookResponse> getBooksByCategory(String category, Pageable pageable) {
+    public Page<BookResponse> getBooksByCategory(String category, @NonNull Pageable pageable) {
         return bookRepository.findByCategory(category, pageable).map(this::toResponse);
     }
 
     @Override
-    public Page<BookResponse> getBooksByAuthor(String author, Pageable pageable) {
+    public Page<BookResponse> getBooksByAuthor(String author, @NonNull Pageable pageable) {
         return bookRepository.findByAuthorContainingIgnoreCase(author, pageable).map(this::toResponse);
     }
 
     @Override
-    public BookResponse getBookById(String id) {
-        @SuppressWarnings("null")
+    public BookResponse getBookById(@NonNull String id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Libro no encontrado"));
         return toResponse(book);
     }
 
-    @SuppressWarnings("null")
+    
     @Override
     @Transactional
-    public BookResponse createBook(CreateBookRequest request, String userId, String userName) {
-        Book book = Book.builder()
+    public BookResponse createBook(@NonNull CreateBookRequest request, String userId, String userName) {
+        Book book = Objects.requireNonNull(Book.builder()
                 .title(request.getTitle())
                 .author(request.getAuthor())
                 .summary(request.getSummary())
@@ -84,21 +85,21 @@ public class BookServiceImpl implements BookService {
                 .coverImage(request.getCoverImage())
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
-                .build();
+                .build());
 
         book = bookRepository.save(book);
         
         if (userId != null && userName != null) {
-            loanService.createBookNotification(userId, userName, book.getTitle());
+            loanService.createBookNotification(Objects.requireNonNull(userId), Objects.requireNonNull(userName), Objects.requireNonNull(book.getTitle()));
         }
         
         return toResponse(book);
     }
 
-    @SuppressWarnings("null")
+    
     @Override
     @Transactional
-    public BookResponse updateBook(String id, UpdateBookRequest request) {
+    public BookResponse updateBook(@NonNull String id, @NonNull UpdateBookRequest request) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Libro no encontrado"));
 
@@ -117,22 +118,22 @@ public class BookServiceImpl implements BookService {
         return toResponse(book);
     }
 
-    @SuppressWarnings("null")
+    
     @Override
     @Transactional
-    public void deleteBook(String id) {
+    public void deleteBook(@NonNull String id) {
         if (!bookRepository.existsById(id)) {
             throw new ResourceNotFoundException("Libro no encontrado");
         }
         bookRepository.deleteById(id);
     }
 
-    @SuppressWarnings("null")
+    
     @Override
     @Transactional
-    public BookResponse rateBook(String bookId, String userId, RatingRequest request) {
+    public BookResponse rateBook(@NonNull String bookId, String userId, @NonNull RatingRequest request) {
         // Busca libro
-        @SuppressWarnings("null")
+        
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new ResourceNotFoundException("Libro no encontrado"));
 
@@ -147,13 +148,13 @@ public class BookServiceImpl implements BookService {
             ratingRepository.save(rating);
         } else {
             // Crea nueva calificación
-            Rating rating = Rating.builder()
+            Rating rating = Objects.requireNonNull(Rating.builder()
                     .userId(userId)
                     .bookId(bookId)
                     .rating(request.getRating())
                     .comment(request.getComment())
                     .createdAt(Instant.now())
-                    .build();
+                    .build());
             ratingRepository.save(rating);
         }
 

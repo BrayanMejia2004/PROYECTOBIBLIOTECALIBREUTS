@@ -5,10 +5,12 @@ import com.uts.biblioteca.model.entity.User;
 import com.uts.biblioteca.service.interfaces.LoanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/notifications")
@@ -20,21 +22,21 @@ public class NotificationController {
     @GetMapping
     public ResponseEntity<List<NotificationResponse>> getNotifications(
             @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(loanService.getNotifications(user.getId()));
+        return ResponseEntity.ok(loanService.getNotifications(Objects.requireNonNull(user.getId())));
     }
 
     @PutMapping("/{id}/read")
     public ResponseEntity<Void> markAsRead(
-            @PathVariable String id,
+            @PathVariable @NonNull String id,
             @AuthenticationPrincipal User user) {
-        loanService.markNotificationAsRead(id, user.getId());
+        loanService.markNotificationAsRead(id, Objects.requireNonNull(user.getId()));
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/read-all")
     public ResponseEntity<Void> markAllAsRead(
             @AuthenticationPrincipal User user) {
-        loanService.markAllNotificationsAsRead(user.getId());
+        loanService.markAllNotificationsAsRead(Objects.requireNonNull(user.getId()));
         return ResponseEntity.ok().build();
     }
 
@@ -45,7 +47,7 @@ public class NotificationController {
 
     @PutMapping("/admin/{id}/read")
     public ResponseEntity<Void> markAdminNotificationAsRead(
-            @PathVariable String id) {
+            @PathVariable @NonNull String id) {
         loanService.markAdminNotificationAsRead(id);
         return ResponseEntity.ok().build();
     }

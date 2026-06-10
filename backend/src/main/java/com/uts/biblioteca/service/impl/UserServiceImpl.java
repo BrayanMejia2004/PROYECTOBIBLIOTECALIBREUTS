@@ -13,11 +13,13 @@ import com.uts.biblioteca.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Objects;
 
 /** Implementación de servicios de usuario */
 @Service
@@ -29,8 +31,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserResponse getUserProfile(String userId) {
-        @SuppressWarnings("null")
+    public UserResponse getUserProfile(@NonNull String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
@@ -39,8 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserResponse updateUserProfile(String userId, String name, String photoUrl) {
-        @SuppressWarnings("null")
+    public UserResponse updateUserProfile(@NonNull String userId, String name, String photoUrl) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
@@ -62,8 +62,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserResponse updateFullProfile(String userId, UpdateProfileRequest request) {
-        @SuppressWarnings("null")
+    public UserResponse updateFullProfile(@NonNull String userId, @NonNull UpdateProfileRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
@@ -78,8 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isProfileComplete(String userId) {
-        @SuppressWarnings("null")
+    public boolean isProfileComplete(@NonNull String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
@@ -89,17 +87,16 @@ public class UserServiceImpl implements UserService {
                 && user.getPhone() != null && !user.getPhone().isBlank();
     }
 
-    @SuppressWarnings("null")
+    
     @Override
-    public Page<UserResponse> getAllUsers(Pageable pageable) {
+    public Page<UserResponse> getAllUsers(@NonNull Pageable pageable) {
         return userRepository.findAll(pageable)
                 .map(this::toUserResponse);
     }
 
     @Override
     @Transactional
-    public UserResponse updateUser(String userId, UpdateUserRequest request) {
-        @SuppressWarnings("null")
+    public UserResponse updateUser(@NonNull String userId, @NonNull UpdateUserRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
@@ -119,11 +116,10 @@ public class UserServiceImpl implements UserService {
         return toUserResponse(user);
     }
 
-    @SuppressWarnings("null")
+    
     @Override
     @Transactional
-    public void deleteUser(String userId) {
-        @SuppressWarnings("null")
+    public void deleteUser(@NonNull String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
@@ -132,7 +128,7 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("No se puede eliminar el usuario porque tiene préstamos activos");
         }
 
-        userRepository.delete(user);
+        userRepository.delete(Objects.requireNonNull(user));
     }
 
     private UserResponse toUserResponse(User user) {

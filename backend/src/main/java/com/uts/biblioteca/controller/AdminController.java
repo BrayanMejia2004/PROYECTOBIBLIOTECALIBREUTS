@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,28 +61,28 @@ public class AdminController {
     /** Obtiene todos los préstamos del sistema */
     @GetMapping("/loans")
     public ResponseEntity<Page<LoanResponse>> getAllLoans(
-            @PageableDefault(size = 20) Pageable pageable) {
+            @PageableDefault(size = 20) @NonNull Pageable pageable) {
         return ResponseEntity.ok(loanService.getAllLoans(pageable));
     }
 
     /** Obtiene todos los usuarios del sistema */
     @GetMapping("/users")
     public ResponseEntity<Page<UserResponse>> getAllUsers(
-            @PageableDefault(size = 20) Pageable pageable) {
+            @PageableDefault(size = 20) @NonNull Pageable pageable) {
         return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 
     /** Actualiza un usuario */
     @PutMapping("/users/{id}")
     public ResponseEntity<UserResponse> updateUser(
-            @PathVariable String id,
-            @Valid @RequestBody UpdateUserRequest request) {
+            @PathVariable @NonNull String id,
+            @Valid @RequestBody @NonNull UpdateUserRequest request) {
         return ResponseEntity.ok(userService.updateUser(id, request));
     }
 
     /** Elimina un usuario */
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable @NonNull String id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

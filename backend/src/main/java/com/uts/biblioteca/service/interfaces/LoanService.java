@@ -5,36 +5,37 @@ import com.uts.biblioteca.dto.response.LoanResponse;
 import com.uts.biblioteca.dto.response.NotificationResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 
 public interface LoanService {
 
-    LoanResponse createLoan(String userId, CreateLoanRequest request);
+    LoanResponse createLoan(@NonNull String userId, @NonNull CreateLoanRequest request);
 
-    Page<LoanResponse> getUserLoans(String userId, Pageable pageable);
+    Page<LoanResponse> getUserLoans(@NonNull String userId, @NonNull Pageable pageable);
 
-    Page<LoanResponse> getAllLoans(Pageable pageable);
+    Page<LoanResponse> getAllLoans(@NonNull Pageable pageable);
 
-    LoanResponse getLoanById(String id);
+    LoanResponse getLoanById(@NonNull String id);
 
-    LoanResponse returnLoan(String loanId, String userId);
+    LoanResponse returnLoan(@NonNull String loanId, @NonNull String userId);
 
-    boolean hasActiveLoans(String userId);
+    boolean hasActiveLoans(@NonNull String userId);
 
-    long countActiveLoans(String userId);
+    long countActiveLoans(@NonNull String userId);
 
-    List<NotificationResponse> getNotifications(String userId);
+    List<NotificationResponse> getNotifications(@NonNull String userId);
 
-    void markNotificationAsRead(String loanId, String userId);
+    void markNotificationAsRead(@NonNull String loanId, @NonNull String userId);
 
-    void markAllNotificationsAsRead(String userId);
+    void markAllNotificationsAsRead(@NonNull String userId);
 
     List<NotificationResponse> getAdminNotifications();
 
-    void markAdminNotificationAsRead(String notificationId);
+    void markAdminNotificationAsRead(@NonNull String notificationId);
 
     void markAllAdminNotificationsAsRead();
 
-    void createBookNotification(String userId, String userName, String bookTitle);
+    void createBookNotification(@NonNull String userId, @NonNull String userName, @NonNull String bookTitle);
 }
