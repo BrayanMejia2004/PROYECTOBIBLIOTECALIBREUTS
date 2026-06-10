@@ -13,6 +13,10 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    if (config.url && !config.url.startsWith('/api')) {
+      config.url = '/api' + config.url;
+    }
+
     const token = localStorage.getItem('token');
     
     if (token) {
