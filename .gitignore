@@ -8,5 +8,8 @@
 # Lock files
 skills-lock.json
 
+# Docker
+.env.docker
+
 # Documentación local (no visible en GitHub)
 DOCUMENTACION/
