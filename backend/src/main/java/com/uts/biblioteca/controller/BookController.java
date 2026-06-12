@@ -103,7 +103,7 @@ public class BookController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BookResponse> updateBook(
             @PathVariable @NonNull String id,
-            @RequestBody @NonNull UpdateBookRequest request) {
+            @Valid @RequestBody @NonNull UpdateBookRequest request) {
         return ResponseEntity.ok(bookService.updateBook(id, request));
     }
 

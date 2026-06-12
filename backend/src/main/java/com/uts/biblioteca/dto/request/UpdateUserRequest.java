@@ -39,10 +39,10 @@ public class UpdateUserRequest {
     @Pattern(regexp = ".*@uts\\.edu\\.co$", message = "Solo se permiten correos institucionales @uts.edu.co")
     private String email;
 
-    @Size(min = 10, max = 50, message = "La contraseña debe tener entre 10 y 50 caracteres")
+    @Size(min = 8, max = 50, message = "La contraseña debe tener entre 8 y 50 caracteres")
     @Pattern(
-        regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{10,}$",
-        message = "La contraseña debe tener al menos 10 caracteres, incluyendo letras, números y un símbolo"
+        regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$",
+        message = "La contraseña debe contener al menos: 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial (@$!%*?&)"
     )
     private String password;
 }

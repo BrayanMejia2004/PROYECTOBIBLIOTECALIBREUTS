@@ -38,8 +38,32 @@ export const registerSchema = z.object({
   path: ['confirmPassword'],
 });
 
+export const profileSchema = z.object({
+  document: z
+    .string()
+    .min(1, 'El documento es requerido')
+    .min(5, 'El documento debe tener al menos 5 caracteres')
+    .max(20, 'El documento debe tener máximo 20 caracteres'),
+  name: z
+    .string()
+    .min(1, 'El nombre es requerido')
+    .min(2, 'El nombre debe tener al menos 2 caracteres')
+    .max(100, 'El nombre debe tener máximo 100 caracteres'),
+  semester: z
+    .number()
+    .int('Debe ser un número entero')
+    .positive('El semestre debe ser un número positivo'),
+  phone: z
+    .string()
+    .min(1, 'El teléfono es requerido')
+    .min(7, 'El teléfono debe tener al menos 7 caracteres')
+    .max(15, 'El teléfono debe tener máximo 15 caracteres')
+    .regex(/^\d+$/, 'El teléfono solo debe contener números'),
+});
+
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
+export type ProfileFormData = z.infer<typeof profileSchema>;
 
 export const getPasswordStrength = (password: string): { score: number; label: string; color: string } => {
   let score = 0;

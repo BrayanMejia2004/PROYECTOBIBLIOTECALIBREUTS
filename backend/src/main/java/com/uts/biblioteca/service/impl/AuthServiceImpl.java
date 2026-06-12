@@ -45,13 +45,6 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("El correo ya está registrado");
         }
 
-        // Valida dominio institucional
-        String emailDomain = request.getEmail().substring(request.getEmail().indexOf("@"));
-        if (!emailDomain.equals("@uts.edu.co")) {
-            log.warn("Dominio de correo inválido: {}", emailDomain);
-            throw new BadRequestException("Solo se permiten correos institucionales @uts.edu.co");
-        }
-
         try {
             // Crea usuario con contraseña encriptada
             // Los campos adicionales (document, name, semester, phone) se completarán en el perfil

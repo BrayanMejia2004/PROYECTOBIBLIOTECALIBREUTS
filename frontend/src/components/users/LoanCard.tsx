@@ -4,6 +4,7 @@ import { Loan } from '../../types';
 import { Card } from '../common/Card';
 import { Button } from '../common/Button';
 import { useTranslation } from '../../i18n';
+import toast from 'react-hot-toast';
 import { BookOpenIcon, ClipboardListIcon, CheckCircleIcon, AlertTriangleIcon, CalendarIcon, ClockIcon } from '../common/AdminIcons';
 import { RatingForm } from '../books/RatingForm';
 
@@ -153,7 +154,18 @@ export const LoanCard = memo(function LoanCard({ loan, onReturn }: LoanCardProps
           {loan.status === 'ACTIVE' && !ratingSubmitted && !showRating && (
             <div className="mt-4">
               <Button
-                onClick={() => setShowRating(true)}
+                onClick={() => {
+                  toast((t) => (
+                    <div className="flex flex-col gap-3">
+                      <p className="font-medium text-gray-900 dark:text-white">¿Devolver libro?</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Se marcará como devuelto y el libro estará disponible.</p>
+                      <div className="flex gap-2 justify-end">
+                        <button onClick={() => toast.dismiss(t.id)} className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">Cancelar</button>
+                        <button onClick={() => { toast.dismiss(t.id); setShowRating(true); }} className="px-3 py-1.5 text-sm rounded-lg bg-[#132F20] text-white hover:bg-[#1a4a2e]">Confirmar</button>
+                      </div>
+                    </div>
+                  ), { duration: Infinity });
+                }}
                 className="btn-ripple"
               >
                 {t('loans.returnBook')}

@@ -9,6 +9,7 @@ import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
 import { Spinner } from '../components/common/Spinner';
 import { useTranslation } from '../i18n';
+import toast from 'react-hot-toast';
 import { BookOpenIcon } from '../components/common/AdminIcons';
 import { StarIcon } from '../components/common/UserIcons';
 
@@ -161,7 +162,16 @@ export default function BookDetailPage() {
                   setTimeout(() => navigate('/profile'), 2000);
                   return;
                 }
-                loanMutation.mutate();
+                toast((t) => (
+                  <div className="flex flex-col gap-3">
+                    <p className="font-medium text-gray-900 dark:text-white">¿Solicitar préstamo?</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Seleccionaste este libro para préstamo. ¿Deseas continuar?</p>
+                    <div className="flex gap-2 justify-end">
+                      <button onClick={() => toast.dismiss(t.id)} className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">Cancelar</button>
+                      <button onClick={() => { toast.dismiss(t.id); loanMutation.mutate(); }} className="px-3 py-1.5 text-sm rounded-lg bg-[#132F20] text-white hover:bg-[#1a4a2e]">Confirmar</button>
+                    </div>
+                  </div>
+                ), { duration: Infinity });
               }}
               isLoading={loanMutation.isPending}
               className="w-full card-lift slide-up text-sm sm:text-base py-2.5 sm:py-3"

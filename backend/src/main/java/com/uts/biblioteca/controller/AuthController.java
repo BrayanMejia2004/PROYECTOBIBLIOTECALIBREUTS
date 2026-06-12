@@ -45,7 +45,7 @@ public class AuthController {
     
     /** Refresca el token JWT usando el token actual */
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refresh(@RequestBody RefreshRequest request) {
+    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshRequest request) {
         AuthResponse response = authService.refreshToken(Objects.requireNonNull(request.getToken()));
         return ResponseEntity.ok(response);
     }
