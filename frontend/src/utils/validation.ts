@@ -43,12 +43,14 @@ export const profileSchema = z.object({
     .string()
     .min(1, 'El documento es requerido')
     .min(5, 'El documento debe tener al menos 5 caracteres')
-    .max(20, 'El documento debe tener máximo 20 caracteres'),
+    .max(20, 'El documento debe tener máximo 20 caracteres')
+    .regex(/^\d+$/, 'El documento solo debe contener números'),
   name: z
     .string()
     .min(1, 'El nombre es requerido')
     .min(2, 'El nombre debe tener al menos 2 caracteres')
-    .max(100, 'El nombre debe tener máximo 100 caracteres'),
+    .max(100, 'El nombre debe tener máximo 100 caracteres')
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, 'El nombre solo debe contener letras'),
   semester: z
     .number()
     .int('Debe ser un número entero')

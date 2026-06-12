@@ -1,5 +1,6 @@
 package com.uts.biblioteca.dto.request;
 
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -31,6 +32,7 @@ public class CreateBookRequest {
 
     @NotNull(message = "El número de páginas es requerido")
     @Positive(message = "El número de páginas debe ser positivo")
+    @Digits(integer = 4, fraction = 0, message = "El número de páginas debe ser un entero")
     private Integer pages;
 
     @NotBlank(message = "El idioma es requerido")
