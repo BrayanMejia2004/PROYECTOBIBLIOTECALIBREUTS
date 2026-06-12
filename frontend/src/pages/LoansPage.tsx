@@ -22,6 +22,7 @@ export default function LoansPage() {
     mutationFn: (loanId: string) => loansApi.returnLoan(loanId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['loans'] });
+      queryClient.invalidateQueries({ queryKey: ['books'] });
     },
   });
 

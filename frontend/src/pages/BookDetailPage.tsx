@@ -32,6 +32,7 @@ export default function BookDetailPage() {
     mutationFn: () => loansApi.create({ bookId: id! }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['book', id] });
+      queryClient.invalidateQueries({ queryKey: ['books'] });
       setLoanMessage(t('book.loanRequested'));
       setTimeout(() => navigate('/catalogue'), 2000);
     },
