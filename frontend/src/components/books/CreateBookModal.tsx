@@ -7,6 +7,7 @@ import { Input } from '../common/Input';
 import { CustomDropdown } from '../common/CustomDropdown';
 import { DatePickerInput } from '../common/DatePickerInput';
 import { useTranslation } from '../../i18n';
+import toast from 'react-hot-toast';
 
 interface CreateBookModalProps {
   isOpen: boolean;
@@ -107,11 +108,16 @@ export function CreateBookModal({ isOpen, onClose }: CreateBookModalProps) {
     
     if (!validate()) return;
 
-    createMutation.mutate({
-      ...formData,
-      publicationDate: new Date(formData.publicationDate).toISOString(),
-      coverImage: previewImage || undefined,
-    });
+    toast((t) => (
+      <div className="flex flex-col gap-3">
+        <p className="font-medium text-gray-900 dark:text-white">¿Agregar libro?</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">El libro se añadirá al catálogo.</p>
+        <div className="flex gap-2 justify-end">
+          <button onClick={() => toast.dismiss(t.id)} className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">Cancelar</button>
+          <button onClick={() => { toast.dismiss(t.id); createMutation.mutate({ ...formData, publicationDate: new Date(formData.publicationDate).toISOString(), coverImage: previewImage || undefined }); }} className="px-3 py-1.5 text-sm rounded-lg bg-[#132F20] text-white hover:bg-[#1a4a2e]">Confirmar</button>
+        </div>
+      </div>
+    ), { duration: Infinity });
   };
 
   const handleClose = () => {

@@ -5,6 +5,7 @@ import com.uts.biblioteca.dto.response.UserResponse;
 import com.uts.biblioteca.model.entity.User;
 import com.uts.biblioteca.service.interfaces.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -47,7 +48,7 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUserProfile(Objects.requireNonNull(user.getId()), null, request.photoUrl()));
     }
 
-    public record PhotoRequest(String photoUrl) {}
+    public record PhotoRequest(@NotBlank(message = "La URL de la foto es requerida") String photoUrl) {}
 
     /** Actualiza el perfil completo del usuario (documento, nombre, semestre, teléfono) */
     @PutMapping("/profile/full")

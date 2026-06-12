@@ -7,6 +7,7 @@ import { Button } from '../components/common/Button';
 import { LanguageToggle } from '../components/common/LanguageToggle';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../i18n';
+import toast from 'react-hot-toast';
 
 function compressImage(base64: string, maxWidth = 300, quality = 0.7): Promise<string> {
   return new Promise((resolve) => {
@@ -69,7 +70,16 @@ export default function SettingsPage() {
   });
 
   const handleRemovePhoto = () => {
-    updateMutation.mutate('');
+    toast((t) => (
+      <div className="flex flex-col gap-3">
+        <p className="font-medium text-gray-900 dark:text-white">¿Eliminar foto?</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">Esta acción no se puede deshacer.</p>
+        <div className="flex gap-2 justify-end">
+          <button onClick={() => toast.dismiss(t.id)} className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">Cancelar</button>
+          <button onClick={() => { toast.dismiss(t.id); updateMutation.mutate(''); }} className="px-3 py-1.5 text-sm rounded-lg bg-[#132F20] text-white hover:bg-[#1a4a2e]">Eliminar</button>
+        </div>
+      </div>
+    ), { duration: Infinity });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../context/AuthContext';
 import { usersApi } from '../api/users';
 import { Card } from '../components/common/Card';
@@ -8,7 +10,8 @@ import { Button } from '../components/common/Button';
 import { Input } from '../components/common/Input';
 import { Spinner } from '../components/common/Spinner';
 import { useTranslation } from '../i18n';
-import { UpdateProfileRequest } from '../types';
+import toast from 'react-hot-toast';
+import { profileSchema, ProfileFormData } from '../utils/validation';
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -16,11 +19,14 @@ export default function ProfilePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState<UpdateProfileRequest>({
-    document: '',
-    name: '',
-    semester: 0,
-    phone: '',
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ProfileFormData>({
+    resolver: zodResolver(profileSchema),
   });
 
   const { data: profile, isLoading } = useQuery({
@@ -29,7 +35,7 @@ export default function ProfilePage() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: (data: UpdateProfileRequest) => usersApi.updateFullProfile(data),
+    mutationFn: (data: ProfileFormData) => usersApi.updateFullProfile(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       setIsEditing(false);
@@ -37,7 +43,7 @@ export default function ProfilePage() {
   });
 
   const handleEdit = () => {
-    setFormData({
+    reset({
       document: profile?.document || user?.document || '',
       name: profile?.name || user?.name || '',
       semester: profile?.semester || user?.semester || 0,
@@ -46,8 +52,17 @@ export default function ProfilePage() {
     setIsEditing(true);
   };
 
-  const handleSave = () => {
-    updateMutation.mutate(formData);
+  const onSubmit = (data: ProfileFormData) => {
+    toast((t) => (
+      <div className="flex flex-col gap-3">
+        <p className="font-medium text-gray-900 dark:text-white">¿Guardar cambios?</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">Se actualizarán tus datos personales.</p>
+        <div className="flex gap-2 justify-end">
+          <button onClick={() => toast.dismiss(t.id)} className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">Cancelar</button>
+          <button onClick={() => { toast.dismiss(t.id); updateMutation.mutate(data); }} className="px-3 py-1.5 text-sm rounded-lg bg-[#132F20] text-white hover:bg-[#1a4a2e]">Confirmar</button>
+        </div>
+      </div>
+    ), { duration: Infinity });
   };
 
   const isProfileComplete = profile?.document && profile?.name && profile?.semester && profile?.phone;
@@ -88,112 +103,114 @@ export default function ProfilePage() {
       )}
 
       <Card className="p-4 sm:p-6 card-lift">
-        <div className="space-y-3 sm:space-y-4">
-          <div className="bg-[#c3d62f]/5 dark:bg-[#c3d62f]/5 p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20 card-lift" style={{ animationDelay: '0.05s' }}>
-            <label className="block text-xs sm:text-sm font-medium text-[#132F20] dark:text-[#c3d62f] mb-1">
-              {t('profile.document')}
-            </label>
-            {isEditing ? (
-              <Input
-                value={formData.document}
-                onChange={(e) => setFormData({ ...formData, document: e.target.value })}
-                placeholder="12345678"
-              />
-            ) : (
-              <p className="text-base sm:text-lg text-gray-900 dark:text-white font-medium">{profile?.document || user?.document || t('profile.notAvailable')}</p>
-            )}
-          </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="space-y-3 sm:space-y-4">
+            <div className="bg-[#c3d62f]/5 dark:bg-[#c3d62f]/5 p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20 card-lift" style={{ animationDelay: '0.05s' }}>
+              <label className="block text-xs sm:text-sm font-medium text-[#132F20] dark:text-[#c3d62f] mb-1">
+                {t('profile.document')}
+              </label>
+              {isEditing ? (
+                <Input
+                  {...register('document')}
+                  placeholder="12345678"
+                  error={errors.document?.message}
+                />
+              ) : (
+                <p className="text-base sm:text-lg text-gray-900 dark:text-white font-medium">{profile?.document || user?.document || t('profile.notAvailable')}</p>
+              )}
+            </div>
 
-          <div className="bg-[#c3d62f]/5 dark:bg-[#c3d62f]/5 p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20 card-lift" style={{ animationDelay: '0.1s' }}>
-            <label className="block text-xs sm:text-sm font-medium text-[#132F20] dark:text-[#c3d62f] mb-1">
-              {t('profile.name')}
-            </label>
-            {isEditing ? (
-              <Input
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder={t('profile.name')}
-              />
-            ) : (
-              <p className="text-base sm:text-lg text-gray-900 dark:text-white font-medium">{profile?.name || user?.name || t('profile.notAvailable')}</p>
-            )}
-          </div>
+            <div className="bg-[#c3d62f]/5 dark:bg-[#c3d62f]/5 p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20 card-lift" style={{ animationDelay: '0.1s' }}>
+              <label className="block text-xs sm:text-sm font-medium text-[#132F20] dark:text-[#c3d62f] mb-1">
+                {t('profile.name')}
+              </label>
+              {isEditing ? (
+                <Input
+                  {...register('name')}
+                  placeholder={t('profile.name')}
+                  error={errors.name?.message}
+                />
+              ) : (
+                <p className="text-base sm:text-lg text-gray-900 dark:text-white font-medium">{profile?.name || user?.name || t('profile.notAvailable')}</p>
+              )}
+            </div>
 
-          <div className="bg-[#c3d62f]/5 dark:bg-[#c3d62f]/5 p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20 card-lift" style={{ animationDelay: '0.15s' }}>
-            <label className="block text-xs sm:text-sm font-medium text-[#132F20] dark:text-[#c3d62f] mb-1">
-              {t('profile.semester')}
-            </label>
-            {isEditing ? (
-              <Input
-                type="number"
-                value={formData.semester || ''}
-                onChange={(e) => setFormData({ ...formData, semester: parseInt(e.target.value) || 0 })}
-                placeholder="1"
-              />
-            ) : (
-              <p className="text-base sm:text-lg text-gray-900 dark:text-white font-medium">{profile?.semester || user?.semester || t('profile.notAvailable')}</p>
-            )}
-          </div>
+            <div className="bg-[#c3d62f]/5 dark:bg-[#c3d62f]/5 p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20 card-lift" style={{ animationDelay: '0.15s' }}>
+              <label className="block text-xs sm:text-sm font-medium text-[#132F20] dark:text-[#c3d62f] mb-1">
+                {t('profile.semester')}
+              </label>
+              {isEditing ? (
+                <Input
+                  type="number"
+                  {...register('semester', { valueAsNumber: true })}
+                  placeholder="1"
+                  error={errors.semester?.message}
+                />
+              ) : (
+                <p className="text-base sm:text-lg text-gray-900 dark:text-white font-medium">{profile?.semester || user?.semester || t('profile.notAvailable')}</p>
+              )}
+            </div>
 
-          <div className="bg-[#c3d62f]/5 dark:bg-[#c3d62f]/5 p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20 card-lift" style={{ animationDelay: '0.2s' }}>
-            <label className="block text-xs sm:text-sm font-medium text-[#132F20] dark:text-[#c3d62f] mb-1">
-              {t('profile.phone')}
-            </label>
-            {isEditing ? (
-              <Input
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="3001234567"
-              />
-            ) : (
-              <p className="text-base sm:text-lg text-gray-900 dark:text-white font-medium">{profile?.phone || user?.phone || t('profile.notAvailable')}</p>
-            )}
-          </div>
+            <div className="bg-[#c3d62f]/5 dark:bg-[#c3d62f]/5 p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20 card-lift" style={{ animationDelay: '0.2s' }}>
+              <label className="block text-xs sm:text-sm font-medium text-[#132F20] dark:text-[#c3d62f] mb-1">
+                {t('profile.phone')}
+              </label>
+              {isEditing ? (
+                <Input
+                  {...register('phone')}
+                  placeholder="3001234567"
+                  error={errors.phone?.message}
+                />
+              ) : (
+                <p className="text-base sm:text-lg text-gray-900 dark:text-white font-medium">{profile?.phone || user?.phone || t('profile.notAvailable')}</p>
+              )}
+            </div>
 
-          <div className="bg-[#c3d62f]/5 dark:bg-[#c3d62f]/5 p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20 card-lift" style={{ animationDelay: '0.25s' }}>
-            <label className="block text-xs sm:text-sm font-medium text-[#132F20] dark:text-[#c3d62f] mb-1">
-              {t('profile.email')}
-            </label>
-            <p className="text-base sm:text-lg text-gray-900 dark:text-white font-medium">{profile?.email || user?.email}</p>
-          </div>
+            <div className="bg-[#c3d62f]/5 dark:bg-[#c3d62f]/5 p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20 card-lift" style={{ animationDelay: '0.25s' }}>
+              <label className="block text-xs sm:text-sm font-medium text-[#132F20] dark:text-[#c3d62f] mb-1">
+                {t('profile.email')}
+              </label>
+              <p className="text-base sm:text-lg text-gray-900 dark:text-white font-medium">{profile?.email || user?.email}</p>
+            </div>
 
-          <div className="bg-[#c3d62f]/5 dark:bg-[#c3d62f]/5 p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20 card-lift" style={{ animationDelay: '0.3s' }}>
-            <label className="block text-xs sm:text-sm font-medium text-[#132F20] dark:text-[#c3d62f] mb-1">
-              {t('profile.role')}
-            </label>
-            <span className={`inline-block px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
-              user?.role === 'ADMIN' 
-                ? 'bg-[#c3d62f]/30 text-[#132F20]' 
-                : 'bg-[#c3d62f]/10 text-[#132F20]'
-            }`}>
-              {user?.role === 'ADMIN' ? t('profile.admin') : t('profile.user')}
-            </span>
-          </div>
+            <div className="bg-[#c3d62f]/5 dark:bg-[#c3d62f]/5 p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20 card-lift" style={{ animationDelay: '0.3s' }}>
+              <label className="block text-xs sm:text-sm font-medium text-[#132F20] dark:text-[#c3d62f] mb-1">
+                {t('profile.role')}
+              </label>
+              <span className={`inline-block px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
+                user?.role === 'ADMIN' 
+                  ? 'bg-[#c3d62f]/30 text-[#132F20]' 
+                  : 'bg-[#c3d62f]/10 text-[#132F20]'
+              }`}>
+                {user?.role === 'ADMIN' ? t('profile.admin') : t('profile.user')}
+              </span>
+            </div>
 
-          <div className="bg-[#c3d62f]/5 dark:bg-[#c3d62f]/5 p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20 card-lift" style={{ animationDelay: '0.35s' }}>
-            <label className="block text-xs sm:text-sm font-medium text-[#132F20] dark:text-[#c3d62f] mb-1">
-              {t('profile.userId')}
-            </label>
-            <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 font-mono truncate">{user?.id}</p>
-          </div>
+            <div className="bg-[#c3d62f]/5 dark:bg-[#c3d62f]/5 p-3 sm:p-4 rounded-lg border border-[#c3d62f]/20 card-lift" style={{ animationDelay: '0.35s' }}>
+              <label className="block text-xs sm:text-sm font-medium text-[#132F20] dark:text-[#c3d62f] mb-1">
+                {t('profile.userId')}
+              </label>
+              <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 font-mono truncate">{user?.id}</p>
+            </div>
 
-          <div className="pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700">
-            {isEditing ? (
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                <Button onClick={handleSave} isLoading={updateMutation.isPending} className="w-full sm:w-auto text-sm sm:text-base">
-                  {t('profile.save')}
+            <div className="pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700">
+              {isEditing ? (
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                  <Button type="submit" isLoading={updateMutation.isPending} className="w-full sm:w-auto text-sm sm:text-base">
+                    {t('profile.save')}
+                  </Button>
+                  <Button variant="outline" type="button" onClick={() => setIsEditing(false)} className="w-full sm:w-auto text-sm sm:text-base">
+                    {t('profile.cancel')}
+                  </Button>
+                </div>
+              ) : !isProfileComplete && (
+                <Button variant="outline" type="button" onClick={handleEdit} className="w-full sm:w-auto text-sm sm:text-base">
+                  {t('profile.edit')}
                 </Button>
-                <Button variant="outline" onClick={() => setIsEditing(false)} className="w-full sm:w-auto text-sm sm:text-base">
-                  {t('profile.cancel')}
-                </Button>
-              </div>
-            ) : !isProfileComplete && (
-              <Button variant="outline" onClick={handleEdit} className="w-full sm:w-auto text-sm sm:text-base">
-                {t('profile.edit')}
-              </Button>
-            )}
+              )}
+            </div>
           </div>
-        </div>
+        </form>
       </Card>
 
       {updateMutation.isError && (
