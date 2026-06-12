@@ -1,5 +1,6 @@
 package com.uts.biblioteca.dto.request;
 
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -29,6 +30,7 @@ public class UpdateBookRequest {
     private Instant publicationDate;
 
     @Positive(message = "El número de páginas debe ser positivo")
+    @Digits(integer = 4, fraction = 0, message = "El número de páginas debe ser un entero")
     private Integer pages;
 
     @Size(min = 1, max = 50, message = "El idioma debe tener entre 1 y 50 caracteres")

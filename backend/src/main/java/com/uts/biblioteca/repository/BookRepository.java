@@ -29,11 +29,11 @@ public interface BookRepository extends MongoRepository<Book, String> {
            "] }")
     Page<Book> search(String searchTerm, Pageable pageable);
 
-    /** Top 10 libros mejor calificados */
-    List<Book> findTop10ByOrderByRatingDesc();
+    /** Libros con calificación mayor al valor dado */
+    List<Book> findByRatingGreaterThan(Double rating);
 
-    /** Top 10 libros más populares (más calificaciones) */
-    List<Book> findTop10ByOrderByRatingCountDesc();
+    /** Libros populares ordenados por cantidad de calificaciones (mínimo 1) */
+    List<Book> findByRatingCountGreaterThanOrderByRatingCountDesc(int minRatingCount);
 
     /** Busca libro por título y autor */
     Optional<Book> findByTitleAndAuthor(String title, String author);

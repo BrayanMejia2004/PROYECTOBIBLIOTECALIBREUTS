@@ -14,7 +14,7 @@ import { CategoryChart, LoanStatusChart, LoansTrendChart } from '../components/a
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../i18n';
 import { User, Book } from '../types';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 const CreateBookModal = lazy(() => import('../components/books/CreateBookModal').then(m => ({ default: m.CreateBookModal })));
 const EditBookModal = lazy(() => import('../components/books/EditBookModal').then(m => ({ default: m.EditBookModal })));
@@ -213,7 +213,6 @@ export default function AdminPage() {
 
   return (
     <>
-      <Toaster />
       <div className="max-w-7xl mx-auto w-full px-3 sm:px-4">
       <div className="mb-4 sm:mb-6 md:mb-8">
         <h1 className="text-2xl sm:text-3xl font-display font-bold text-[#132F20] dark:text-white">

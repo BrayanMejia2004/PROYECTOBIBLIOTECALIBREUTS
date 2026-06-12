@@ -190,14 +190,15 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookResponse> getPopularBooks() {
-        return bookRepository.findTop10ByOrderByRatingCountDesc().stream()
+        return bookRepository.findByRatingCountGreaterThanOrderByRatingCountDesc(0)
+                .stream().limit(10)
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<BookResponse> getTopRatedBooks() {
-        return bookRepository.findTop10ByOrderByRatingDesc().stream()
+        return bookRepository.findByRatingGreaterThan(4.0).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }

@@ -8,6 +8,7 @@ import { Layout } from './components/layout/Layout';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
 import { AdminRoute } from './components/layout/AdminRoute';
 import { Spinner } from './components/common/Spinner';
+import { Toaster } from 'react-hot-toast';
 
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
@@ -45,6 +46,20 @@ function App() {
                   <Spinner size="lg" />
                 </div>
               }>
+                <Toaster
+                  position="top-right"
+                  toastOptions={{
+                    duration: Infinity,
+                    style: {
+                      borderRadius: '12px',
+                      background: '#fff',
+                      color: '#132F20',
+                      boxShadow: '0 10px 40px rgba(0, 0, 0, 0.15)',
+                      border: '1px solid #c3d62f',
+                      maxWidth: '400px',
+                    },
+                  }}
+                />
                 <Routes>
                   <Route path="/" element={<WelcomePage />} />
                   <Route path="/login" element={<LoginPage />} />
