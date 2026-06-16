@@ -8,6 +8,9 @@
 # Lock files
 skills-lock.json
 
+# Entorno local
+.env
+
 # Docker
 .env.docker
 
