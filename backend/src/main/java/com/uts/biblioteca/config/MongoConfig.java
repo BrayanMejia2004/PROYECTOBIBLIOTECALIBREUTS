@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 @EnableMongoAuditing
 public class MongoConfig {
 
-    @Value("${spring.data.mongodb.uri}")
+    @Value("${spring.mongodb.uri}")
     private String mongoUri;
 
     private final MongoDatabaseFactory mongoDatabaseFactory;
