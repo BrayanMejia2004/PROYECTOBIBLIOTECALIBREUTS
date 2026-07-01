@@ -203,6 +203,7 @@ public class BookServiceImpl implements BookService {
     @Cacheable("topRatedBooks")
     public List<BookResponse> getTopRatedBooks() {
         return bookRepository.findByRatingGreaterThan(4.0).stream()
+                .limit(10)
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }

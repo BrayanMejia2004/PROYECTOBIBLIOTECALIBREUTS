@@ -1,12 +1,13 @@
 server:
   port: ${PORT:8080}
+  shutdown: graceful
   compression:
     enabled: true
     mime-types: application/json,text/xml,text/plain,text/html
     min-response-size: 1024
 
 jwt:
-  secret: ${JWT_SECRET:biblioteca-uts-secret-key-must-be-at-least-256-bits-long-for-hmac-sha256}
+  secret: ${JWT_SECRET}
   expiration: ${JWT_EXPIRATION:86400000}
   refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}
 
@@ -33,9 +34,27 @@ rate-limit:
 spring:
   application:
     name: biblioteca-uts
-  
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:prod}
-  
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  mongodb:
+    uri: mongodb://localhost:27017/biblioteca_uts
+
+logging:
+  level:
+    "[com.uts.biblioteca]": DEBUG
+    "[org.springframework.data.mongodb]": DEBUG
+    "[org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer]": ERROR
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
   mongodb:
     uri: ${MONGODB_URI}
+
+logging:
+  level:
+    "[com.uts.biblioteca]": INFO
+    "[org.springframework.data.mongodb]": WARN
+    "[org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer]": ERROR

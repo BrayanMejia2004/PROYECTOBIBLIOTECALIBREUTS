@@ -26,7 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -279,7 +284,7 @@ public class LoanServiceImpl implements LoanService {
     }
 
     // Admin notifications storage (in-memory)
-    private static final List<NotificationResponse> adminNotifications = new ArrayList<>();
+    private static final List<NotificationResponse> adminNotifications = new CopyOnWriteArrayList<>();
 
     @Override
     public List<NotificationResponse> getAdminNotifications() {
