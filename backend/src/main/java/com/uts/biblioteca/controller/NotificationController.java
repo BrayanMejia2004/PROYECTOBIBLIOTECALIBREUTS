@@ -5,7 +5,7 @@ import com.uts.biblioteca.model.entity.User;
 import com.uts.biblioteca.service.interfaces.LoanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 

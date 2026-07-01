@@ -7,7 +7,7 @@ import com.uts.biblioteca.dto.response.BookResponse;
 import com.uts.biblioteca.dto.response.UserRatingResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 

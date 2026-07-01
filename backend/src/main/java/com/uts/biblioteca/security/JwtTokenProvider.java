@@ -29,12 +29,12 @@ public class JwtTokenProvider {
 
     /** Extrae el nombre de usuario del token */
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        return extractClaim(token, claims -> claims.getSubject());
     }
 
     /** Extrae la fecha de expiración del token */
     public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+        return extractClaim(token, claims -> claims.getExpiration());
     }
 
     /** Extrae un claim específico del token */

@@ -1,7 +1,6 @@
 spring:
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/biblioteca_uts
+  mongodb:
+    uri: mongodb://localhost:27017/biblioteca_uts
 
 logging:
   level:

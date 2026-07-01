@@ -5,7 +5,7 @@ import com.uts.biblioteca.dto.request.UpdateUserRequest;
 import com.uts.biblioteca.dto.response.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /** Interfaz para servicios de usuario */
 public interface UserService {

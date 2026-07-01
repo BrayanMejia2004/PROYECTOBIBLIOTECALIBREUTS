@@ -3,7 +3,7 @@ package com.uts.biblioteca.service.interfaces;
 import com.uts.biblioteca.dto.request.LoginRequest;
 import com.uts.biblioteca.dto.request.RegisterRequest;
 import com.uts.biblioteca.dto.response.AuthResponse;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /** Interfaz para servicios de autenticación */
 public interface AuthService {

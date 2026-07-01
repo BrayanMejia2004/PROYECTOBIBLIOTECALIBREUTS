@@ -15,7 +15,7 @@ import com.uts.biblioteca.service.interfaces.LoanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -161,7 +161,7 @@ public class BookServiceImpl implements BookService {
         // Calcula nuevo promedio
         List<Rating> ratings = ratingRepository.findByBookId(bookId);
         Double averageRating = ratings.stream()
-                .mapToInt(Rating::getRating)
+                .mapToInt(rating -> rating.getRating())
                 .average()
                 .orElse(0.0);
 
