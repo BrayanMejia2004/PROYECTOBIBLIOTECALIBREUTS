@@ -13,6 +13,8 @@ import com.uts.biblioteca.repository.RatingRepository;
 import com.uts.biblioteca.service.interfaces.BookService;
 import com.uts.biblioteca.service.interfaces.LoanService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.jspecify.annotations.NonNull;
@@ -70,6 +72,7 @@ public class BookServiceImpl implements BookService {
     
     @Override
     @Transactional
+    @CacheEvict(value = {"popularBooks", "topRatedBooks", "adminStats"}, allEntries = true)
     public BookResponse createBook(@NonNull CreateBookRequest request, String userId, String userName) {
         Book book = Objects.requireNonNull(Book.builder()
                 .title(request.getTitle())
@@ -99,6 +102,7 @@ public class BookServiceImpl implements BookService {
     
     @Override
     @Transactional
+    @CacheEvict(value = {"popularBooks", "topRatedBooks", "adminStats"}, allEntries = true)
     public BookResponse updateBook(@NonNull String id, @NonNull UpdateBookRequest request) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Libro no encontrado"));
@@ -121,6 +125,7 @@ public class BookServiceImpl implements BookService {
     
     @Override
     @Transactional
+    @CacheEvict(value = {"popularBooks", "topRatedBooks", "adminStats"}, allEntries = true)
     public void deleteBook(@NonNull String id) {
         if (!bookRepository.existsById(id)) {
             throw new ResourceNotFoundException("Libro no encontrado");
@@ -131,6 +136,7 @@ public class BookServiceImpl implements BookService {
     
     @Override
     @Transactional
+    @CacheEvict(value = {"popularBooks", "topRatedBooks", "adminStats"}, allEntries = true)
     public BookResponse rateBook(@NonNull String bookId, String userId, @NonNull RatingRequest request) {
         // Busca libro
         
@@ -158,16 +164,12 @@ public class BookServiceImpl implements BookService {
             ratingRepository.save(rating);
         }
 
-        // Calcula nuevo promedio
-        List<Rating> ratings = ratingRepository.findByBookId(bookId);
-        Double averageRating = ratings.stream()
-                .mapToInt(rating -> rating.getRating())
-                .average()
-                .orElse(0.0);
+        // Calcula nuevo promedio directamente en MongoDB
+        Double averageRating = ratingRepository.findAverageRatingByBookId(bookId);
+        long ratingCount = ratingRepository.countByBookId(bookId);
 
-        // Actualiza libro
-        book.setRating(averageRating);
-        book.setRatingCount(ratings.size());
+        book.setRating(averageRating != null ? averageRating : 0.0);
+        book.setRatingCount((int) ratingCount);
         book.setUpdatedAt(Instant.now());
         bookRepository.save(book);
 
@@ -189,6 +191,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Cacheable("popularBooks")
     public List<BookResponse> getPopularBooks() {
         return bookRepository.findByRatingCountGreaterThanOrderByRatingCountDesc(0)
                 .stream().limit(10)
@@ -197,6 +200,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Cacheable("topRatedBooks")
     public List<BookResponse> getTopRatedBooks() {
         return bookRepository.findByRatingGreaterThan(4.0).stream()
                 .map(this::toResponse)

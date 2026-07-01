@@ -1,6 +1,7 @@
 package com.uts.biblioteca.repository;
 
 import com.uts.biblioteca.model.entity.Rating;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
@@ -18,6 +19,13 @@ public interface RatingRepository extends MongoRepository<Rating, String> {
     /** Verifica si usuario ya calificó un libro */
     boolean existsByUserIdAndBookId(String userId, String bookId);
 
-    /** Calcula promedio de calificación de un libro */
+    /** Calcula promedio de calificación de un libro directamente en MongoDB */
+    @Aggregation(pipeline = {
+        "{ $match: { 'bookId': ?0 } }",
+        "{ $group: { _id: null, average: { $avg: '$rating' } } }"
+    })
     Double findAverageRatingByBookId(String bookId);
+
+    /** Cuenta calificaciones de un libro */
+    long countByBookId(String bookId);
 }

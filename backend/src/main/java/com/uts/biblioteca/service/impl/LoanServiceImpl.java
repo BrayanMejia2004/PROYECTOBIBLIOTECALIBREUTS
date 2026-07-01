@@ -17,6 +17,7 @@ import com.uts.biblioteca.repository.UserRepository;
 import com.uts.biblioteca.service.interfaces.LoanService;
 import com.uts.biblioteca.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.jspecify.annotations.NonNull;
@@ -25,9 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /** Implementación de servicios de préstamos */
 @Service
@@ -44,6 +45,7 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "adminStats", allEntries = true)
     public LoanResponse createLoan(@NonNull String userId, @NonNull CreateLoanRequest request) {
         // Valida que el perfil esté completo
         if (!userService.isProfileComplete(userId)) {
@@ -93,42 +95,33 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public Page<LoanResponse> getUserLoans(@NonNull String userId, @NonNull Pageable pageable) {
-        return loanRepository.findByUserId(userId, pageable)
-                .map(loan -> {
-                    Book book = bookRepository.findById(Objects.requireNonNull(loan.getBookId()))
-                            .orElse(null);
-                    return toResponse(loan, book);
-                });
+        Page<Loan> loans = loanRepository.findByUserId(userId, pageable);
+        Map<String, Book> bookMap = fetchBooksByIds(loans.getContent());
+        return loans.map(loan -> toResponse(loan, bookMap.get(loan.getBookId())));
     }
 
     @Override
     public Page<LoanResponse> getAllLoans(@NonNull Pageable pageable) {
-        return loanRepository.findAll(pageable)
-                .map(loan -> {
-                    Book book = bookRepository.findById(Objects.requireNonNull(loan.getBookId()))
-                            .orElse(null);
-                    User user = userRepository.findById(Objects.requireNonNull(loan.getUserId()))
-                            .orElse(null);
-                    return toResponse(loan, book, user);
-                });
+        Page<Loan> loans = loanRepository.findAll(pageable);
+        Map<String, Book> bookMap = fetchBooksByIds(loans.getContent());
+        Map<String, User> userMap = fetchUsersByIds(loans.getContent());
+        return loans.map(loan -> toResponse(loan, bookMap.get(loan.getBookId()), userMap.get(loan.getUserId())));
     }
 
     @Override
     public LoanResponse getLoanById(@NonNull String id) {
-        Loan loan = Objects.requireNonNull(loanRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Préstamo no encontrado")));
-        
-        Book book = bookRepository.findById(Objects.requireNonNull(loan.getBookId()))
-                .orElse(null);
-        
-        User user = userRepository.findById(Objects.requireNonNull(loan.getUserId()))
-                .orElse(null);
-        
+        Loan loan = loanRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Préstamo no encontrado"));
+
+        Book book = bookRepository.findById(loan.getBookId()).orElse(null);
+        User user = userRepository.findById(loan.getUserId()).orElse(null);
+
         return toResponse(loan, book, user);
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "adminStats", allEntries = true)
     public LoanResponse returnLoan(@NonNull String loanId, @NonNull String userId) {
         // Busca préstamo
         Loan loan = Objects.requireNonNull(loanRepository.findById(loanId)
@@ -175,40 +168,36 @@ public class LoanServiceImpl implements LoanService {
     public List<NotificationResponse> getNotifications(@NonNull String userId) {
         List<NotificationResponse> notifications = new ArrayList<>();
         Instant now = Instant.now();
-        
-        List<Loan> overdueLoans = loanRepository.findByUserIdAndStatus(userId, LoanStatus.OVERDUE);
-        for (Loan loan : overdueLoans) {
-            Book book = bookRepository.findById(Objects.requireNonNull(loan.getBookId())).orElse(null);
-            notifications.add(NotificationResponse.builder()
-                    .id(loan.getId())
-                    .type("OVERDUE")
-                    .message("Tu préstamo del libro \"" + (book != null ? book.getTitle() : "Unknown") + "\" está vencido")
-                    .loanId(loan.getId())
-                    .bookTitle(book != null ? book.getTitle() : null)
-                    .dueDate(loan.getDueDate())
-                    .read(loan.isNotificationRead())
-                    .createdAt(loan.getDueDate())
-                    .build());
-        }
-        
         Instant threeDaysFromNow = now.plus(DAYS_BEFORE_NOTIFICATION, ChronoUnit.DAYS);
-        List<Loan> dueSoonLoans = loanRepository.findByUserIdAndStatusAndDueDateBetween(
-                userId, LoanStatus.ACTIVE, now, threeDaysFromNow);
-        for (Loan loan : dueSoonLoans) {
-            Book book = bookRepository.findById(Objects.requireNonNull(loan.getBookId())).orElse(null);
-            long daysUntilDue = ChronoUnit.DAYS.between(now, loan.getDueDate());
+
+        List<Loan> loans = new ArrayList<>();
+        loans.addAll(loanRepository.findByUserIdAndStatus(userId, LoanStatus.OVERDUE));
+        loans.addAll(loanRepository.findByUserIdAndStatusAndDueDateBetween(
+                userId, LoanStatus.ACTIVE, now, threeDaysFromNow));
+
+        Map<String, Book> bookMap = fetchBooksByIds(loans);
+
+        for (Loan loan : loans) {
+            Book book = bookMap.get(loan.getBookId());
+            boolean isOverdue = loan.getStatus() == LoanStatus.OVERDUE;
+            String bookTitle = book != null ? book.getTitle() : "Unknown";
+            String type = isOverdue ? "OVERDUE" : "DUE_SOON";
+            String message = isOverdue
+                    ? "Tu préstamo del libro \"" + bookTitle + "\" está vencido"
+                    : "Tu préstamo del libro \"" + bookTitle + "\" vence en "
+                    + ChronoUnit.DAYS.between(now, loan.getDueDate()) + " día(s)";
             notifications.add(NotificationResponse.builder()
                     .id(loan.getId())
-                    .type("DUE_SOON")
-                    .message("Tu préstamo del libro \"" + (book != null ? book.getTitle() : "Unknown") + "\" vence en " + daysUntilDue + " día(s)")
+                    .type(type)
+                    .message(message)
                     .loanId(loan.getId())
                     .bookTitle(book != null ? book.getTitle() : null)
                     .dueDate(loan.getDueDate())
                     .read(loan.isNotificationRead())
-                    .createdAt(now)
+                    .createdAt(isOverdue ? loan.getDueDate() : now)
                     .build());
         }
-        
+
         return notifications;
     }
 
@@ -225,20 +214,16 @@ public class LoanServiceImpl implements LoanService {
     @Override
     @Transactional
     public void markAllNotificationsAsRead(@NonNull String userId) {
-        List<Loan> overdueLoans = loanRepository.findByUserIdAndStatus(userId, LoanStatus.OVERDUE);
-        for (Loan loan : overdueLoans) {
-            loan.setNotificationRead(true);
-            loanRepository.save(loan);
-        }
-        
         Instant now = Instant.now();
         Instant threeDaysFromNow = now.plus(DAYS_BEFORE_NOTIFICATION, ChronoUnit.DAYS);
-        List<Loan> dueSoonLoans = loanRepository.findByUserIdAndStatusAndDueDateBetween(
-                userId, LoanStatus.ACTIVE, now, threeDaysFromNow);
-        for (Loan loan : dueSoonLoans) {
-            loan.setNotificationRead(true);
-            loanRepository.save(loan);
-        }
+
+        List<Loan> loans = new ArrayList<>();
+        loans.addAll(loanRepository.findByUserIdAndStatus(userId, LoanStatus.OVERDUE));
+        loans.addAll(loanRepository.findByUserIdAndStatusAndDueDateBetween(
+                userId, LoanStatus.ACTIVE, now, threeDaysFromNow));
+
+        loans.forEach(loan -> loan.setNotificationRead(true));
+        loanRepository.saveAll(loans);
     }
 
     /** Convierte entidad Loan a LoanResponse con objeto Book y User */
@@ -265,7 +250,6 @@ public class LoanServiceImpl implements LoanService {
         if (user != null) {
             userResponse = UserResponse.builder()
                     .id(user.getId())
-                    .document(user.getDocument())
                     .name(user.getName())
                     .semester(user.getSemester())
                     .phone(user.getPhone())
@@ -334,5 +318,27 @@ public class LoanServiceImpl implements LoanService {
                 .createdAt(Instant.now())
                 .build();
         adminNotifications.add(0, notification);
+    }
+
+    private Map<String, Book> fetchBooksByIds(List<Loan> loans) {
+        List<String> bookIds = loans.stream()
+                .map(loan -> loan.getBookId())
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+        if (bookIds.isEmpty()) return Collections.emptyMap();
+        return bookRepository.findAllById(bookIds).stream()
+                .collect(Collectors.toMap(book -> book.getId(), Function.identity()));
+    }
+
+    private Map<String, User> fetchUsersByIds(List<Loan> loans) {
+        List<String> userIds = loans.stream()
+                .map(loan -> loan.getUserId())
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+        if (userIds.isEmpty()) return Collections.emptyMap();
+        return userRepository.findAllById(userIds).stream()
+                .collect(Collectors.toMap(user -> user.getId(), Function.identity()));
     }
 }

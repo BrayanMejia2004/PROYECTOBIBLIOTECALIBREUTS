@@ -12,6 +12,7 @@ import com.uts.biblioteca.service.interfaces.LoanService;
 import com.uts.biblioteca.service.interfaces.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -40,14 +41,13 @@ public class AdminController {
 
     /** Obtiene estadísticas del dashboard */
     @GetMapping("/stats")
+    @Cacheable("adminStats")
     public ResponseEntity<AdminStatsResponse> getStats() {
         long totalBooks = bookRepository.count();
         long totalUsers = userRepository.count();
         long activeLoans = loanRepository.countByStatus(LoanStatus.ACTIVE);
         long returnedLoans = loanRepository.countByStatus(LoanStatus.RETURNED);
-        
-        Instant now = Instant.now();
-        long overdueLoans = loanRepository.findByStatusAndDueDateBefore(LoanStatus.ACTIVE, now).size();
+        long overdueLoans = loanRepository.countByStatusAndDueDateBefore(LoanStatus.ACTIVE, Instant.now());
 
         return ResponseEntity.ok(AdminStatsResponse.builder()
                 .totalBooks(totalBooks)

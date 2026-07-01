@@ -30,6 +30,9 @@ public interface LoanRepository extends MongoRepository<Loan, String> {
     /** Cuenta todos los préstamos por estado */
     long countByStatus(LoanStatus status);
 
+    /** Cuenta préstamos vencidos por estado y fecha */
+    long countByStatusAndDueDateBefore(LoanStatus status, java.time.Instant dueDate);
+
     /** Busca préstamos que vencen en los próximos X días */
     List<Loan> findByUserIdAndStatusAndDueDateBetween(
         String userId, LoanStatus status, java.time.Instant start, java.time.Instant end);

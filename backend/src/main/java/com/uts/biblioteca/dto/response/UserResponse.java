@@ -1,5 +1,6 @@
 package com.uts.biblioteca.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.uts.biblioteca.model.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 
 /** DTO para respuesta de usuario */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,8 +18,6 @@ import java.time.Instant;
 public class UserResponse {
 
     private String id;
-
-    private String document;
 
     private String name;
 

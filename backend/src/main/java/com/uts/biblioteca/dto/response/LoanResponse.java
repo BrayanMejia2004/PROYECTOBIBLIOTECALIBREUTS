@@ -1,5 +1,6 @@
 package com.uts.biblioteca.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.uts.biblioteca.model.enums.LoanStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 
 /** DTO para respuesta de préstamo */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @Builder
 @NoArgsConstructor

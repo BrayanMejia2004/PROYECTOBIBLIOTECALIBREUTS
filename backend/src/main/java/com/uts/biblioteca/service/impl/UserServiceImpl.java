@@ -134,7 +134,6 @@ public class UserServiceImpl implements UserService {
     private UserResponse toUserResponse(User user) {
         return UserResponse.builder()
                 .id(user.getId())
-                .document(user.getDocument())
                 .name(user.getName())
                 .semester(user.getSemester())
                 .phone(user.getPhone())
